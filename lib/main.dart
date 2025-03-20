@@ -19,12 +19,8 @@ class _CoffeeMenuState extends State<CoffeeMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: 
-      SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
+      appBar: AppBar(
+        title: Container(
               height: 50, // Высота контейнера с кнопками
               child: ListView.builder(
                 scrollDirection: Axis.horizontal, // Горизонтальный скролл
@@ -57,6 +53,11 @@ class _CoffeeMenuState extends State<CoffeeMenu> {
                 },
               ),
             ),
+          ),
+      body: 
+      SingleChildScrollView(
+        child: Column(
+          children: [
           Container(
             child: Padding(padding: EdgeInsets.all(16),
             child: Column(
