@@ -113,7 +113,7 @@ class CustomTextWidget extends StatelessWidget {
   }
 }
 
-
+//listcreator для создания списка вынес отдельно
 class ListCreator extends StatefulWidget {
   @override
   _ListCreatorState createState() => _ListCreatorState();
