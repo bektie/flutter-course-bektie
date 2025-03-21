@@ -262,8 +262,24 @@ Widget buildCoffeeCard(String name, String price, String image, int index) {
           width: 100,
           height: 100,
         ), // Уникальная картинка
-        Text(name, style: TextStyle(fontWeight: FontWeight.bold)), // Уникальное имя
-        Text(price, style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))), // Уникальная цена
+        Padding(
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 4),
+          child: Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
+        ),
+        SizedBox(
+          width: 116,
+          height: 24,
+          child: ElevatedButton(
+            onPressed: () {
+              print("Нажали!");
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.lightBlue[200], // Задаём цвет кнопки
+            ),
+            child: Text(price, style: TextStyle(color: Colors.white)),
+          ),
+        )
+         // Уникальная цена
       ],
     ),
   );
