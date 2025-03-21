@@ -11,73 +11,80 @@ class CoffeeMenu extends StatefulWidget {
 }
 
 class _CoffeeMenuState extends State<CoffeeMenu> {
-  int selectedIndex = 0; 
-
-  final List<String> categories = [
-    'Кофе с молоком', 'Чай', 'Черный кофе', 'Горячий шоколад'
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: ListCreator()
+      backgroundColor: Color.fromARGB(255, 235, 246, 255),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            pinned: true,
+            elevation: 0,
+            forceElevated: false,
+            backgroundColor: Color.fromARGB(255, 235, 246, 255),
+            flexibleSpace: FlexibleSpaceBar(
+              collapseMode: CollapseMode.none,
+              stretchModes: const [], 
+              background: Container(
+                color: Color.fromARGB(255, 235, 246, 255),
+                child: Center(child: ListCreator()),
+              ),
           ),
-      body: 
-      SingleChildScrollView(
-        child: Column(
-          children: [
-          Container(
-            child: Padding(padding: EdgeInsets.all(16),
-            child: Column(
-              children: [
-                CustomTextWidget(text: 'Кофе с молоком'),
-                coffeeGridBuilder(context),
-                CustomTextWidget(text: 'Чай'),
-                coffeeGridBuilder(context),
-                CustomTextWidget(text: 'Черный кофе'),
-                coffeeGridBuilder(context),
-                CustomTextWidget(text: 'Горячий шоколад'),
-                coffeeGridBuilder(context),
-                CustomTextWidget(text: 'Авторские напитки'),
-                coffeeGridBuilder(context),
-                CustomTextWidget(text: 'Рафы'),
-                coffeeGridBuilder(context),
-                CustomTextWidget(text: 'Колд брю'),
-                coffeeGridBuilder(context),
-                CustomTextWidget(text: 'еще что нибудь'),
-                coffeeGridBuilder(context),
-            ],
           ),
-        )
-        )
-          ],
-      )
+          SliverToBoxAdapter(
+            child: CustomTextWidget(text: "Кофе с молоком"),
+          ),
+          builderGridSliver(2),
+          SliverToBoxAdapter(
+            child: CustomTextWidget(text: "Черный кофе"),
+          ),
+          builderGridSliver(3),
+          SliverToBoxAdapter(
+            child: CustomTextWidget(text: "Колд брю"),
+          ),
+          builderGridSliver(4),
+          SliverToBoxAdapter(
+            child: CustomTextWidget(text: "Горячий шоколад"),
+          ),
+          builderGridSliver(2),
+          SliverToBoxAdapter(
+            child: CustomTextWidget(text: "Чай"),
+          ),
+          builderGridSliver(2),
+        ],
       )
       );
   }
 }
 
-
-//задает свойства для контейнеров содержащих карточку с кофе
-Widget coffeeGridBuilder(BuildContext context) {
-    return GridView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: 2, //реализовать позже функцию ввода,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,
-        crossAxisSpacing: 20,
-        mainAxisSpacing: 20 
-        ), 
-        itemBuilder: (context, index) {
-          return buildCoffeeCard('1','1','1');
-      }
-      );
-  }
+//динамически позволяет менять число элементов в отдельной категории
+SliverGrid builderGridSliver(int itemCount) {
+  return SliverGrid(delegate: SliverChildBuilderDelegate((context, index)
+          {
+            return buildCoffeeCard('', '', '', index);
+          }, 
+          childCount: itemCount
+          ), 
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 8
+            )
+          );
+}
 
 //создает карточку кофе
-Widget buildCoffeeCard(String name, String price, String image) {
+Widget buildCoffeeCard(String name, String price, String image, int index) {
+  double indL = 0;
+  double indR = 0;
+  if (index % 2 == 0) {
+    indL = 16; 
+  }
+  else 
+  {
+    indR = 16;
+  }
   return Container(
+    margin: EdgeInsets.only(top: 16, left: indL, right: indR),
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(15)
@@ -100,7 +107,7 @@ class CustomTextWidget extends StatelessWidget {
     return Align(
       alignment: Alignment.centerLeft,
       child: Padding(
-        padding: EdgeInsets.only(top: 16),
+        padding: EdgeInsets.only(top: 16, left: 8),
         child: Text(
      text,
           style: TextStyle(
@@ -113,12 +120,14 @@ class CustomTextWidget extends StatelessWidget {
   }
 }
 
-//listcreator для создания списка вынес отдельно
+//listcreator для создания списка 
 class ListCreator extends StatefulWidget {
   @override
   _ListCreatorState createState() => _ListCreatorState();
 }
 
+//это создание верхнего списка
+//реализовать физику телепорта к катгеории
 class _ListCreatorState extends State<ListCreator> {
   int selectedIndex = 0; 
   final List<String> categories = [
