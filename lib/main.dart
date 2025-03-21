@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math'; // Добавь в начало файла
 
 void main() {
   runApp(MaterialApp(home: CoffeeMenu()));
@@ -20,6 +21,7 @@ class _CoffeeMenuState extends State<CoffeeMenu> {
   final GlobalKey hotChocolateKey = GlobalKey();
   final GlobalKey teaKey = GlobalKey();
 
+  double scrollOffset = 0; 
 
   late Map<String, GlobalKey> categoryKeys;
 
@@ -44,7 +46,9 @@ class _CoffeeMenuState extends State<CoffeeMenu> {
       body: NotificationListener<ScrollNotification>(
       onNotification: (notification) {
         if (notification is ScrollUpdateNotification) {
-          print(''); //реализовать позже
+          setState(() {
+            scrollOffset = notification.metrics.pixels; 
+          });
         }
         return false; // false чтобы не останавливать дальнейшую обработку
       }, 
@@ -60,7 +64,7 @@ class _CoffeeMenuState extends State<CoffeeMenu> {
               stretchModes: const [], 
               background: Container(
                 color: Color.fromARGB(255, 235, 246, 255),
-                child: Center(child: ListCreator()),
+                child: Center(child: ListCreator(scrollOffset: scrollOffset)), 
               ),
           ),
           ),
@@ -68,27 +72,27 @@ class _CoffeeMenuState extends State<CoffeeMenu> {
             key: milkCoffeeKey,
             child: CustomTextWidget(text: "Кофе с молоком"),
           ),
-          builderGridSliver(2),
+          builderGridSliverMilkCoffee(2), 
           SliverToBoxAdapter(
             key: blackCoffeeKey,
             child: CustomTextWidget(text: "Черный кофе"),
           ),
-          builderGridSliver(3),
+          builderGridSliverBlackCoffee(2), 
           SliverToBoxAdapter(
             key: coldBrewKey,
             child: CustomTextWidget(text: "Колд брю"),
           ),
-          builderGridSliver(4),
+          builderGridSliverColdBrew(3),
           SliverToBoxAdapter(
             key: hotChocolateKey,
             child: CustomTextWidget(text: "Горячий шоколад"),
           ),
-          builderGridSliver(2),
+          builderGridSliverHotChoc(2), 
           SliverToBoxAdapter(
             key: teaKey,
             child: CustomTextWidget(text: "Чай"),
           ),
-          builderGridSliver(2),
+          builderGridSliverTea(2), 
         ],
       )
       )
@@ -97,40 +101,202 @@ class _CoffeeMenuState extends State<CoffeeMenu> {
 }
 
 //динамически позволяет менять число элементов в отдельной категории
-SliverGrid builderGridSliver(int itemCount) {
-  return SliverGrid(delegate: SliverChildBuilderDelegate((context, index)
-          {
-            return buildCoffeeCard('', '', '', index);
-          }, 
-          childCount: itemCount
-          ), 
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 8
-            )
-          );
+SliverGrid builderGridSliverMilkCoffee(int itemCount) {
+  return SliverGrid(
+    delegate: SliverChildBuilderDelegate(
+      (context, index) {
+        if (milkCoffeeItems.length < itemCount) {
+          return buildCoffeeCard("Латте", "100", "assets/placeholder.jpg", 0);
+        }
+        else {
+        try {
+        final coffeeIndex = index % milkCoffeeItems.length; 
+        final coffee = milkCoffeeItems[coffeeIndex];
+        return buildCoffeeCard(coffee.name, coffee.price, coffee.image, coffeeIndex);
+        }
+        catch (IntegerDivisionByZeroException) { 
+          final coffee = "assets/placeholder.jpg";
+          return buildCoffeeCard("Латте", "100", coffee, 0);
+        }
+        }
+      },
+      childCount: itemCount,
+    ),
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 2,
+      crossAxisSpacing: 8,
+      mainAxisSpacing: 8,
+    ),
+  );
 }
+SliverGrid builderGridSliverBlackCoffee(int itemCount) {
+  return SliverGrid(
+    delegate: SliverChildBuilderDelegate(
+      (context, index) {
+        if (blackCoffeeItems.length < itemCount) {
+          return buildCoffeeCard("Латте", "100", "assets/placeholder.jpg", 0);
+        }
+        else {
+        try {
+        final coffeeIndex = index % blackCoffeeItems.length; 
+        final coffee = blackCoffeeItems[coffeeIndex];
+        return buildCoffeeCard(coffee.name, coffee.price, coffee.image, coffeeIndex);
+        }
+        catch (IntegerDivisionByZeroException) { 
+          final coffee = "assets/placeholder.jpg";
+          return buildCoffeeCard("Латте", "100", coffee, 0);
+        }
+        }
+      },
+      childCount: itemCount,
+    ),
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 2,
+      crossAxisSpacing: 8,
+      mainAxisSpacing: 8,
+    ),
+  );
+}
+SliverGrid builderGridSliverColdBrew(int itemCount) {
+  return SliverGrid(
+    delegate: SliverChildBuilderDelegate(
+      (context, index) {
+        if (coldBrewCoffeeItems.length < itemCount) {
+          return buildCoffeeCard("Латте", "100", "assets/placeholder.jpg", 0);
+        }
+        else {
+        try {
+        final coffeeIndex = index % coldBrewCoffeeItems.length; 
+        final coffee = coldBrewCoffeeItems[coffeeIndex];
+        return buildCoffeeCard(coffee.name, coffee.price, coffee.image, coffeeIndex);
+        }
+        catch (IntegerDivisionByZeroException) { 
+          final coffee = "assets/placeholder.jpg";
+          return buildCoffeeCard("Латте", "100", coffee, 0);
+        }
+        }
+      },
+      childCount: itemCount,
+    ),
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 2,
+      crossAxisSpacing: 8,
+      mainAxisSpacing: 8,
+    ),
+  );
+}
+SliverGrid builderGridSliverHotChoc(int itemCount) {
+  return SliverGrid(
+    delegate: SliverChildBuilderDelegate(
+      (context, index) {
+        if (hotChocCoffeeItems.length < itemCount) {
+          return buildCoffeeCard("Латте", "100", "assets/placeholder.jpg", 0);
+        }
+        else {
+        try {
+        final coffeeIndex = index % hotChocCoffeeItems.length; 
+        final coffee = hotChocCoffeeItems[coffeeIndex];
+        return buildCoffeeCard(coffee.name, coffee.price, coffee.image, coffeeIndex);
+        }
+        catch (IntegerDivisionByZeroException) { 
+          final coffee = "assets/placeholder.jpg";
+          return buildCoffeeCard("Латте", "100", coffee, 0);
+        }
+        }
+      },
+      childCount: itemCount,
+    ),
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 2,
+      crossAxisSpacing: 8,
+      mainAxisSpacing: 8,
+    ),
+  );
+}
+SliverGrid builderGridSliverTea(int itemCount) {
+  return SliverGrid(
+    delegate: SliverChildBuilderDelegate(
+      (context, index) {
+        if (teaItems.length < itemCount) {
+          return buildCoffeeCard("Латте", "100", "assets/placeholder.jpg", 0);
+        }
+        else {
+        try {
+        final coffeeIndex = index % teaItems.length; 
+        final coffee = teaItems[coffeeIndex];
+        return buildCoffeeCard(coffee.name, coffee.price, coffee.image, coffeeIndex);
+        }
+        catch (IntegerDivisionByZeroException) { 
+          final coffee = "assets/placeholder.jpg";
+          return buildCoffeeCard("Латте", "100", coffee, 0);
+        }
+        }
+      },
+      childCount: itemCount,
+    ),
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 2,
+      crossAxisSpacing: 8,
+      mainAxisSpacing: 8,
+    ),
+  );
+}
+
 
 //создает карточку кофе
 Widget buildCoffeeCard(String name, String price, String image, int index) {
-  double indL = 0;
-  double indR = 0;
-  if (index % 2 == 0) {
-    indL = 16; 
-  }
-  else 
-  {
-    indR = 16;
-  }
+  double indL = (index % 2 == 0) ? 16 : 8; 
+  double indR = (index % 2 == 1) ? 16 : 8; 
   return Container(
-    margin: EdgeInsets.only(top: 16, left: indL, right: indR),
+    margin: EdgeInsets.only(top: 16, bottom: 16, left: indL, right: indR),
     decoration: BoxDecoration(
       color: Colors.white,
-      borderRadius: BorderRadius.circular(15)
+      borderRadius: BorderRadius.circular(15),
+      boxShadow: [BoxShadow(color: Colors.grey.shade300, blurRadius: 5)],
     ),
-    child: Text('123123')
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset(
+          image,
+          width: 100,
+          height: 100,
+        ), // Уникальная картинка
+        Text(name, style: TextStyle(fontWeight: FontWeight.bold)), // Уникальное имя
+        Text(price, style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0))), // Уникальная цена
+      ],
+    ),
   );
 }
+
+class CoffeeItem {
+  final String name;
+  final String price;
+  final String image;
+
+  CoffeeItem({required this.name, required this.price, required this.image});
+}
+
+final List<CoffeeItem> milkCoffeeItems = [
+  CoffeeItem(name: "ЛАТТЕ", price: "249RUB", image: "assets/latte.jpg"),
+  CoffeeItem(name: "КАПУЧИНО", price: "249RUB", image: "assets/capuccino.png"),
+];
+final List<CoffeeItem> blackCoffeeItems = [
+  CoffeeItem(name: "АМЕРИКАНО", price: "139RUB", image: "assets/americano.jpg"),
+  CoffeeItem(name: "ЭСПРЕССО", price: "149RUB", image: "assets/espresso.jpg"),
+];
+final List<CoffeeItem> coldBrewCoffeeItems = [
+  CoffeeItem(name: "КОЛД БРЮ", price: "449RUB", image: "assets/coldbrew.jpg"),
+  CoffeeItem(name: "КОЛД БРЮ С ВИШНЕЙ", price: "409RUB", image: "assets/coldbrewCherry.jpg"),
+  CoffeeItem(name: "НИТРО", price: "349RUB", image: "assets/nitro.jpg"),
+];
+final List<CoffeeItem> hotChocCoffeeItems = [
+  CoffeeItem(name: "КАКАО", price: "129RUB", image: "assets/cacao.jpg"),
+  CoffeeItem(name: "ГОРЯЧИЙ ШОКОЛАД", price: "199RUB", image: "assets/hotchoc.jpg"),];
+final List<CoffeeItem> teaItems = [
+  CoffeeItem(name: "ШИПОВНИК", price: "209RUB", image: "assets/teaShip.jpg"),
+  CoffeeItem(name: "ОБЛЕПИХОВЫЙ", price: "209RUB", image: "assets/teaOblepiha.jpg"),];
+
 
 //создает текст заголовков
 class CustomTextWidget extends StatelessWidget {
@@ -159,8 +325,12 @@ class CustomTextWidget extends StatelessWidget {
   }
 }
 
-//listcreator для создания списка 
+
 class ListCreator extends StatefulWidget {
+  final double scrollOffset; 
+
+  const ListCreator({Key? key, required this.scrollOffset}) : super(key: key);
+
   @override
   _ListCreatorState createState() => _ListCreatorState();
 }
@@ -175,50 +345,55 @@ class _ListCreatorState extends State<ListCreator> {
   ];
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 50, 
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: categories.length,
-        itemBuilder: (context, index) {
-          bool isSelected = index == selectedIndex;
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedIndex = index;
-              });
-              final _CoffeeMenuState? parentState = context.findAncestorStateOfType<_CoffeeMenuState>();
-              if (parentState != null) {
-                final categoryName = categories[index];
-                final targetKey = parentState.categoryKeys[categoryName];
-                if (targetKey != null) {
-                  Scrollable.ensureVisible(
-                    targetKey.currentContext!,
-                    duration: Duration(milliseconds: 500),
-                  );
+Widget build(BuildContext context) {
+  return Transform.translate(
+    offset: Offset(-min(widget.scrollOffset, 30).toDouble(), 0),
+    child: SingleChildScrollView(
+      scrollDirection: Axis.horizontal, 
+      child: Container(
+        height: 50, 
+        child: Row(
+          children: categories.map((category) {
+            int index = categories.indexOf(category);
+            bool isSelected = index == selectedIndex;
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  selectedIndex = index;
+                });
+
+                final _CoffeeMenuState? parentState = context.findAncestorStateOfType<_CoffeeMenuState>();
+                if (parentState != null) {
+                  final categoryName = categories[index];
+                  final targetKey = parentState.categoryKeys[categoryName];
+                  if (targetKey != null) {
+                    Scrollable.ensureVisible(
+                      targetKey.currentContext!,
+                      duration: Duration(milliseconds: 500),
+                    );
+                  }
                 }
-              }
-            },
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 8),
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              decoration: BoxDecoration(
-                color: isSelected ? Colors.lightBlue[200] : Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.grey.shade300),
-              ),
-              child: Text(
-                categories[index],
-                style: TextStyle(
-                  color: isSelected ? Colors.white : Colors.black,
-                  fontWeight: FontWeight.bold,
+              },
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 8),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(
+                  color: isSelected ? Colors.lightBlue[200] : Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.grey.shade300),
+                ),
+                child: Text(
+                  category,
+                  style: TextStyle(
+                    color: isSelected ? Colors.white : Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          }).toList(),
+        ),
       ),
-    );
-  }
-}
+    ),
+  );
+}}
