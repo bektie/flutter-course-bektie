@@ -37,9 +37,18 @@ class _CoffeeMenuState extends State<CoffeeMenu> {
 
   @override
   Widget build(BuildContext context) {
+
+    
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 235, 246, 255),
-      body: CustomScrollView(
+      body: NotificationListener<ScrollNotification>(
+      onNotification: (notification) {
+        if (notification is ScrollUpdateNotification) {
+          print(''); //реализовать позже
+        }
+        return false; // false чтобы не останавливать дальнейшую обработку
+      }, 
+      child: CustomScrollView(
         slivers: [
           SliverAppBar(
             pinned: true,
@@ -82,7 +91,8 @@ class _CoffeeMenuState extends State<CoffeeMenu> {
           builderGridSliver(2),
         ],
       )
-      );
+      )
+     );
   }
 }
 
@@ -154,6 +164,8 @@ class ListCreator extends StatefulWidget {
   @override
   _ListCreatorState createState() => _ListCreatorState();
 }
+
+
 
 //это создание верхнего списка
 class _ListCreatorState extends State<ListCreator> {
