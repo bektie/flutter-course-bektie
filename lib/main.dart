@@ -13,6 +13,28 @@ class CoffeeMenu extends StatefulWidget {
 }
 
 class _CoffeeMenuState extends State<CoffeeMenu> {
+
+  final GlobalKey milkCoffeeKey = GlobalKey();
+  final GlobalKey blackCoffeeKey = GlobalKey();
+  final GlobalKey coldBrewKey = GlobalKey();
+  final GlobalKey hotChocolateKey = GlobalKey();
+  final GlobalKey teaKey = GlobalKey();
+
+
+  late Map<String, GlobalKey> categoryKeys;
+
+  @override
+  void initState() {
+    super.initState();
+    categoryKeys = {
+      'Кофе с молоком': milkCoffeeKey,
+      'Черный кофе': blackCoffeeKey,
+      'Колд брю': coldBrewKey,
+      'Горячий шоколад': hotChocolateKey,
+      'Чай': teaKey,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,22 +56,27 @@ class _CoffeeMenuState extends State<CoffeeMenu> {
           ),
           ),
           SliverToBoxAdapter(
+            key: milkCoffeeKey,
             child: CustomTextWidget(text: "Кофе с молоком"),
           ),
           builderGridSliver(2),
           SliverToBoxAdapter(
+            key: blackCoffeeKey,
             child: CustomTextWidget(text: "Черный кофе"),
           ),
           builderGridSliver(3),
           SliverToBoxAdapter(
+            key: coldBrewKey,
             child: CustomTextWidget(text: "Колд брю"),
           ),
           builderGridSliver(4),
           SliverToBoxAdapter(
+            key: hotChocolateKey,
             child: CustomTextWidget(text: "Горячий шоколад"),
           ),
           builderGridSliver(2),
           SliverToBoxAdapter(
+            key: teaKey,
             child: CustomTextWidget(text: "Чай"),
           ),
           builderGridSliver(2),
@@ -129,11 +156,10 @@ class ListCreator extends StatefulWidget {
 }
 
 //это создание верхнего списка
-//реализовать физику телепорта к катгеории
 class _ListCreatorState extends State<ListCreator> {
   int selectedIndex = 0; 
   final List<String> categories = [
-    'Кофе с молоком', 'Чай', 'Черный кофе', 'Горячий шоколад'
+    'Кофе с молоком', 'Черный кофе', 'Колд брю', 'Горячий шоколад', 'Чай'
   ];
 
   @override
@@ -150,6 +176,17 @@ class _ListCreatorState extends State<ListCreator> {
               setState(() {
                 selectedIndex = index;
               });
+              final _CoffeeMenuState? parentState = context.findAncestorStateOfType<_CoffeeMenuState>();
+              if (parentState != null) {
+                final categoryName = categories[index];
+                final targetKey = parentState.categoryKeys[categoryName];
+                if (targetKey != null) {
+                  Scrollable.ensureVisible(
+                    targetKey.currentContext!,
+                    duration: Duration(milliseconds: 500),
+                  );
+                }
+              }
             },
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 8),
