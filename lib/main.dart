@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'dart:math'; // Добавь в начало файла
 
+double pos1 = 0;
+double pos2 = 0;
+bool flag = false;
+
 void main() {
   runApp(MaterialApp(home: CoffeeMenu()));
+  
 }
 
 class CoffeeMenu extends StatefulWidget {
   const CoffeeMenu({super.key});
+  
   
   @override
   _CoffeeMenuState createState() => _CoffeeMenuState();
@@ -14,7 +20,7 @@ class CoffeeMenu extends StatefulWidget {
 }
 
 class _CoffeeMenuState extends State<CoffeeMenu> {
-
+final ScrollController _ScrollController1 = ScrollController();
   final GlobalKey milkCoffeeKey = GlobalKey();
   final GlobalKey blackCoffeeKey = GlobalKey();
   final GlobalKey coldBrewKey = GlobalKey();
@@ -39,18 +45,16 @@ class _CoffeeMenuState extends State<CoffeeMenu> {
 
   @override
   Widget build(BuildContext context) {
+    
+     _ScrollController1.addListener(() {
+     pos1  = _ScrollController1.position.pixels;
+  });
+    
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 235, 246, 255),
       body: NotificationListener<ScrollNotification>(
-      onNotification: (notification) {
-        if (notification is ScrollUpdateNotification) {
-          setState(() {
-            scrollOffset = notification.metrics.pixels; 
-          });
-        }
-        return false; // false чтобы не останавливать дальнейшую обработку
-      }, 
       child: CustomScrollView(
+        controller: _ScrollController1,
         slivers: [
           SliverAppBar(
             pinned: true,
@@ -92,9 +96,29 @@ class _CoffeeMenuState extends State<CoffeeMenu> {
           ),
           builderGridSliverTea(2), 
         ],
-      )
-      )
-     );
+      ),
+
+        onNotification: (notification) 
+        {
+          setState(() {
+          if (notification.metrics.axis == Axis.vertical) {
+          flag = true;
+          print('1');
+         }
+          else if (notification.metrics.axis == Axis.horizontal)
+        {
+          flag = false;
+          print('2');
+        }
+        } 
+        );
+        return false;
+        }
+        
+
+
+     )
+    );
   }
 }
 
@@ -523,23 +547,29 @@ class ListCreator extends StatefulWidget {
 }
 
 
-
 //это создание верхнего списка
 class _ListCreatorState extends State<ListCreator> {
   int selectedIndex = 0; 
+  final ScrollController _ScrollController = ScrollController();
   final List<String> categories = [
     'Кофе с молоком', 'Черный кофе', 'Колд брю', 'Горячий шоколад', 'Чай'
   ];
 
   @override
 Widget build(BuildContext context) {
-  return Transform.translate(
-    offset: Offset(-min(widget.scrollOffset, 30).toDouble(), 0),
-    child: SingleChildScrollView(
+    if (flag) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_ScrollController.hasClients) {
+          _ScrollController.jumpTo(pos1 / 2.60361594);
+        }
+      });
+      return Transform.translate(
+        offset: Offset(0,0),
+    child: ListView(
+      controller: _ScrollController,
       scrollDirection: Axis.horizontal, 
-      child: Container(
-        height: 50, 
-        child: Row(
+      children: [
+        Row(
           children: categories.map((category) {
             int index = categories.indexOf(category);
             bool isSelected = index == selectedIndex;
@@ -548,7 +578,6 @@ Widget build(BuildContext context) {
                 setState(() {
                   selectedIndex = index;
                 });
-
                 final _CoffeeMenuState? parentState = context.findAncestorStateOfType<_CoffeeMenuState>();
                 if (parentState != null) {
                   final categoryName = categories[index];
@@ -556,7 +585,7 @@ Widget build(BuildContext context) {
                   if (targetKey != null) {
                     Scrollable.ensureVisible(
                       targetKey.currentContext!,
-                      duration: Duration(milliseconds: 500),
+                      duration: Duration(milliseconds: 700),
                     );
                   }
                 }
@@ -579,8 +608,57 @@ Widget build(BuildContext context) {
               ),
             );
           }).toList(),
-        ),
-      ),
-    ),
-  );
+        ),]
+      )
+    );}
+  else {
+    return Transform.translate(
+    offset: Offset(0,0),
+    child: ListView(
+      controller: _ScrollController,
+      scrollDirection: Axis.horizontal, 
+      children: [
+        Row(
+          children: categories.map((category) {
+            int index = categories.indexOf(category);
+            bool isSelected = index == selectedIndex;
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  selectedIndex = index;
+                });
+                final _CoffeeMenuState? parentState = context.findAncestorStateOfType<_CoffeeMenuState>();
+                if (parentState != null) {
+                  final categoryName = categories[index];
+                  final targetKey = parentState.categoryKeys[categoryName];
+                  if (targetKey != null) {
+                    Scrollable.ensureVisible(
+                      targetKey.currentContext!,
+                      duration: Duration(milliseconds: 700),
+                    );
+                  }
+                }
+              },
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 8),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(
+                  color: isSelected ? Colors.lightBlue[200] : Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.grey.shade300),
+                ),
+                child: Text(
+                  category,
+                  style: TextStyle(
+                    color: isSelected ? Colors.white : Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),]
+      )
+    );
+  }
 }}
