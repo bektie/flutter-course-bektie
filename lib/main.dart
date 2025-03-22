@@ -39,8 +39,6 @@ class _CoffeeMenuState extends State<CoffeeMenu> {
 
   @override
   Widget build(BuildContext context) {
-
-    
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 235, 246, 255),
       body: NotificationListener<ScrollNotification>(
@@ -106,17 +104,32 @@ SliverGrid builderGridSliverMilkCoffee(int itemCount) {
     delegate: SliverChildBuilderDelegate(
       (context, index) {
         if (milkCoffeeItems.length < itemCount) {
-          return buildCoffeeCard("Латте", "100", "assets/placeholder.jpg", 0);
+          return buildCoffeeCard(
+            name: "Латте",
+            price: "100",
+            image: "assets/placeholder.jpg",
+            index: 0,
+          );
         }
         else {
         try {
         final coffeeIndex = index % milkCoffeeItems.length; 
         final coffee = milkCoffeeItems[coffeeIndex];
-        return buildCoffeeCard(coffee.name, coffee.price, coffee.image, coffeeIndex);
+          return buildCoffeeCard(
+            name: coffee.name,
+            price: coffee.price,
+            image: coffee.image,
+            index: coffeeIndex,
+          );
         }
         catch (IntegerDivisionByZeroException) { 
           final coffee = "assets/placeholder.jpg";
-          return buildCoffeeCard("Латте", "100", coffee, 0);
+          return buildCoffeeCard(
+            name: "Латте",
+            price: "100",
+            image: coffee,
+            index: 0,
+          );
         }
         }
       },
@@ -134,17 +147,32 @@ SliverGrid builderGridSliverBlackCoffee(int itemCount) {
     delegate: SliverChildBuilderDelegate(
       (context, index) {
         if (blackCoffeeItems.length < itemCount) {
-          return buildCoffeeCard("Латте", "100", "assets/placeholder.jpg", 0);
+          return buildCoffeeCard(
+            name: "Латте",
+            price: "100",
+            image: "assets/placeholder.jpg",
+            index: 0,
+          );
         }
         else {
         try {
         final coffeeIndex = index % blackCoffeeItems.length; 
         final coffee = blackCoffeeItems[coffeeIndex];
-        return buildCoffeeCard(coffee.name, coffee.price, coffee.image, coffeeIndex);
+          return buildCoffeeCard(
+            name: coffee.name,
+            price: coffee.price,
+            image: coffee.image,
+            index: coffeeIndex,
+          );
         }
         catch (IntegerDivisionByZeroException) { 
           final coffee = "assets/placeholder.jpg";
-          return buildCoffeeCard("Латте", "100", coffee, 0);
+          return buildCoffeeCard(
+            name: "Латте",
+            price: "100",
+            image: coffee,
+            index: 0,
+          );
         }
         }
       },
@@ -162,17 +190,32 @@ SliverGrid builderGridSliverColdBrew(int itemCount) {
     delegate: SliverChildBuilderDelegate(
       (context, index) {
         if (coldBrewCoffeeItems.length < itemCount) {
-          return buildCoffeeCard("Латте", "100", "assets/placeholder.jpg", 0);
+          return buildCoffeeCard(
+            name: "Латте",
+            price: "100",
+            image: "assets/placeholder.jpg",
+            index: 0,
+          );
         }
         else {
         try {
         final coffeeIndex = index % coldBrewCoffeeItems.length; 
         final coffee = coldBrewCoffeeItems[coffeeIndex];
-        return buildCoffeeCard(coffee.name, coffee.price, coffee.image, coffeeIndex);
+          return buildCoffeeCard(
+            name: coffee.name,
+            price: coffee.price,
+            image: coffee.image,
+            index: coffeeIndex,
+          );
         }
         catch (IntegerDivisionByZeroException) { 
           final coffee = "assets/placeholder.jpg";
-          return buildCoffeeCard("Латте", "100", coffee, 0);
+          return buildCoffeeCard(
+            name: "Латте",
+            price: "100",
+            image: coffee,
+            index: 0,
+          );
         }
         }
       },
@@ -190,17 +233,32 @@ SliverGrid builderGridSliverHotChoc(int itemCount) {
     delegate: SliverChildBuilderDelegate(
       (context, index) {
         if (hotChocCoffeeItems.length < itemCount) {
-          return buildCoffeeCard("Латте", "100", "assets/placeholder.jpg", 0);
+          return buildCoffeeCard(
+            name: "Латте",
+            price: "100",
+            image: "assets/placeholder.jpg",
+            index: 0,
+          );
         }
         else {
         try {
         final coffeeIndex = index % hotChocCoffeeItems.length; 
         final coffee = hotChocCoffeeItems[coffeeIndex];
-        return buildCoffeeCard(coffee.name, coffee.price, coffee.image, coffeeIndex);
+        return buildCoffeeCard(
+            name: coffee.name,
+            price: coffee.price,
+            image: coffee.image,
+            index: coffeeIndex,
+          );
         }
         catch (IntegerDivisionByZeroException) { 
           final coffee = "assets/placeholder.jpg";
-          return buildCoffeeCard("Латте", "100", coffee, 0);
+          return buildCoffeeCard(
+            name: "Латте",
+            price: "100",
+            image: coffee,
+            index: 0,
+          );
         }
         }
       },
@@ -217,18 +275,33 @@ SliverGrid builderGridSliverTea(int itemCount) {
   return SliverGrid(
     delegate: SliverChildBuilderDelegate(
       (context, index) {
-        if (teaItems.length < itemCount) {
-          return buildCoffeeCard("Латте", "100", "assets/placeholder.jpg", 0);
-        }
+      if (teaItems.length < itemCount) {
+          return buildCoffeeCard(
+            name: "Латте",
+            price: "100",
+            image: "assets/placeholder.jpg",
+            index: 0,
+          );
+      }
         else {
         try {
         final coffeeIndex = index % teaItems.length; 
         final coffee = teaItems[coffeeIndex];
-        return buildCoffeeCard(coffee.name, coffee.price, coffee.image, coffeeIndex);
+        return buildCoffeeCard(
+            name: coffee.name,
+            price: coffee.price,
+            image: coffee.image,
+            index: coffeeIndex,
+          );
         }
         catch (IntegerDivisionByZeroException) { 
           final coffee = "assets/placeholder.jpg";
-          return buildCoffeeCard("Латте", "100", coffee, 0);
+          return buildCoffeeCard(
+            name: "Латте",
+            price: "100",
+            image: coffee,
+            index: 0,
+          );
         }
         }
       },
@@ -243,10 +316,25 @@ SliverGrid builderGridSliverTea(int itemCount) {
 }
 
 
-//создает карточку кофе
-Widget buildCoffeeCard(String name, String price, String image, int index) {
-  double indL = (index % 2 == 0) ? 16 : 8; 
-  double indR = (index % 2 == 1) ? 16 : 8; 
+class buildCoffeeCard extends StatefulWidget {
+  final String name;
+  final String price;
+  final String image;
+  final int index;
+
+    const buildCoffeeCard(
+      {super.key, required this.name, required this.price, required this.image, required this.index});
+
+  @override
+  State<buildCoffeeCard> createState() => _BuildCoffeeCardState();
+}
+
+class _BuildCoffeeCardState extends State<buildCoffeeCard> {
+  bool showPriceIcons = false;
+  @override
+  Widget build(BuildContext context) {
+  double indL = (widget.index % 2 == 0) ? 16 : 8; 
+  double indR = (widget.index % 2 == 1) ? 16 : 8; 
   return Container(
     margin: EdgeInsets.only(top: 16, bottom: 16, left: indL, right: indR),
     decoration: BoxDecoration(
@@ -256,34 +344,117 @@ Widget buildCoffeeCard(String name, String price, String image, int index) {
     ),
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Image.asset(
-          image,
+          Align(
+          alignment: Alignment.center,
+          child: Image.asset(
+          widget.image,
           width: 100,
           height: 100,
-        ), // Уникальная картинка
-        Padding(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 4),
-          child: Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
+        ),
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: Padding
+          (
+            padding: EdgeInsets.only(bottom: 4),
+            child: Text(widget.name, style: TextStyle(fontWeight: FontWeight.bold))
+          ),
         ),
         SizedBox(
           width: 116,
           height: 24,
-          child: ElevatedButton(
-            onPressed: () {
-              print("Нажали!");
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.lightBlue[200], // Задаём цвет кнопки
-            ),
-            child: Text(price, style: TextStyle(color: Colors.white)),
-          ),
+          child:  Padding(
+            padding: EdgeInsets.only(left: 0),
+          child: showPriceIcons
+            ? PriceIcons()
+            : ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.lightBlue[200]
+                ),
+                child: Text(widget.price, style: TextStyle(color: Colors.white),),
+                onPressed: () {
+                  setState(() {
+                    showPriceIcons = true;
+                  });
+                },
+              )
+            )
         )
-         // Уникальная цена
       ],
     ),
   );
 }
+  }
+
+
+
+class PriceIcons extends StatefulWidget {
+
+  @override
+  _PriceIconsState createState() => _PriceIconsState();
+}
+
+class _PriceIconsState extends State<PriceIcons>{
+  int counterPrice = 1;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        IconButton(
+          padding: EdgeInsets.only(bottom: 10),
+          onPressed: () {
+            setState(() {
+              if (counterPrice == 1) {
+                counterPrice = 0;
+                final parent = context.findAncestorStateOfType<_BuildCoffeeCardState>();
+                parent?.setState(() {
+                  parent.showPriceIcons = false;
+                });
+              }
+              else {
+              counterPrice--;
+              }
+            });
+          },
+          icon: Icon(Icons.remove),
+        ),
+        SizedBox(
+          width: 30,
+          height: 24,
+          child: SizedBox(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.lightBlue[200],
+                borderRadius: BorderRadius.circular(15)
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(top: 2),
+                child: Text(counterPrice.toString(), textAlign: TextAlign.center, style: TextStyle(color: Colors.white),),
+            )
+            )
+          ),
+        ),
+        IconButton(
+          padding: EdgeInsets.only(bottom: 10),
+          onPressed: () {
+            setState(() {
+              if (counterPrice == 10) {
+                counterPrice = 10;
+              }
+              else {
+              counterPrice++;
+              }
+            });
+          },
+          icon: Icon(Icons.add),
+        ),
+      ] 
+    );
+  }
+}
+
 
 class CoffeeItem {
   final String name;
