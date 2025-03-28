@@ -32,7 +32,7 @@ class _PriceIconsState extends State<PriceIcons>{
           icon: Icon(Icons.remove),
         ),
         SizedBox(
-          width: 20,
+          width: 30,
           height: 24,
           child: SizedBox(
             child: Container(

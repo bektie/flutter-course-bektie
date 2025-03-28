@@ -76,6 +76,7 @@ Widget build(BuildContext context) {
                 ),
                 child: Text(
                   category,
+                  key: Key('category_$category'),
                   style: TextStyle(
                     color: isSelected ? Colors.white : Colors.black,
                     fontWeight: FontWeight.bold
@@ -129,6 +130,7 @@ Widget build(BuildContext context) {
                 ),
                 child: Text(
                   category,
+                  key: Key('category_$category'),
                   style: TextStyle(
                     color: isSelected ? Colors.white : Colors.black,
                     fontWeight: FontWeight.bold,
