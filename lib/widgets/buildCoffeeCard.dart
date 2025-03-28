@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'PriceIcons.dart';
 
 class buildCoffeeCard extends StatefulWidget {
+  
   final String name;
   final String price;
   final String image;
@@ -15,6 +16,7 @@ class buildCoffeeCard extends StatefulWidget {
 }
 
 class BuildCoffeeCardState extends State<buildCoffeeCard> {
+  final transit = GlobalKey();
   bool showPriceIcons = false;
   @override
   Widget build(BuildContext context) {
@@ -55,6 +57,7 @@ class BuildCoffeeCardState extends State<buildCoffeeCard> {
           child: showPriceIcons
             ? PriceIcons()
             : ElevatedButton(
+              key: Key('transit'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.lightBlue[200]
                 ),

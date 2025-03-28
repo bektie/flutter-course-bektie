@@ -4,10 +4,10 @@ import 'buildCoffeeCard.dart';
 class PriceIcons extends StatefulWidget {
 
   @override
-  _PriceIconsState createState() => _PriceIconsState();
+  PriceIconsState createState() => PriceIconsState();
 }
 
-class _PriceIconsState extends State<PriceIcons>{
+class PriceIconsState extends State<PriceIcons>{
   int counterPrice = 1;
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class _PriceIconsState extends State<PriceIcons>{
           icon: Icon(Icons.remove),
         ),
         SizedBox(
-          width: 30,
+          width: 20,
           height: 24,
           child: SizedBox(
             child: Container(
