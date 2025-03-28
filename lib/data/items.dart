@@ -6,7 +6,7 @@ class CoffeeItem {
   CoffeeItem({required this.name, required this.price, required this.image});
 }
 
-final List<CoffeeItem> milkCoffeeItems = [
+List<CoffeeItem> milkCoffeeItems = [
   CoffeeItem(name: "ЛАТТЕ", price: "249RUB", image: "assets/latte.jpg"),
   CoffeeItem(name: "КАПУЧИНО", price: "249RUB", image: "assets/capuccino.png"),
 ];

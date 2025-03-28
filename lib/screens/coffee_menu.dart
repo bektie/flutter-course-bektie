@@ -61,7 +61,6 @@ class CoffeeMenuState extends State<CoffeeMenu> {
       listCreatorKey.currentState?.updateSelectedCategory('Чай');
     }
       }
-
   });
     
     return Scaffold(
