@@ -89,35 +89,35 @@ class CoffeeMenuState extends State<CoffeeMenu> {
               child: CustomTextWidget(text: "Кофе с молоком"),
             ),
           ),
-          builderGridSliverMilkCoffee(2), 
+          builderGridSliverUniversal(1, 2),
           SliverToBoxAdapter(
             child: Container(
               key: blackCoffeeKey,
               child: CustomTextWidget(text: "Черный кофе"),
             ),
           ),
-          builderGridSliverBlackCoffee(2), 
+          builderGridSliverUniversal(2, 2),
           SliverToBoxAdapter(
             child: Container(
               key: coldBrewKey,
               child: CustomTextWidget(text: "Колд брю"),
             ),
           ),
-          builderGridSliverColdBrew(3),
+          builderGridSliverUniversal(3, 3),
           SliverToBoxAdapter(
             child: Container(
               key: hotChocolateKey,
               child: CustomTextWidget(text: "Горячий шоколад"),
             ),
           ),
-          builderGridSliverHotChoc(2), 
+          builderGridSliverUniversal(4, 2),
           SliverToBoxAdapter(
             child: Container(
               key: teaKey,
               child: CustomTextWidget(text: "Чай"),
             ),
           ),
-          builderGridSliverTea(2), 
+         builderGridSliverUniversal(5, 2),
         ],
       ),
 
