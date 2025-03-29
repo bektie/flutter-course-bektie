@@ -1,0 +1,160 @@
+{
+	"info": {
+		"_postman_id": "c1cb6ecb-aa45-417c-ac9d-1cf5f75d2d2b",
+		"name": "Coffee shop",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23202829"
+	},
+	"item": [
+		{
+			"name": "All products",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://coffeeshop.academy.effective.band/api/v1/products?page=0&limit=50",
+					"protocol": "https",
+					"host": [
+						"coffeeshop",
+						"academy",
+						"effective",
+						"band"
+					],
+					"path": [
+						"api",
+						"v1",
+						"products"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "limit",
+							"value": "50"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All products by category",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://coffeeshop.academy.effective.band/api/v1/products?page=0&limit=50&category=1",
+					"protocol": "https",
+					"host": [
+						"coffeeshop",
+						"academy",
+						"effective",
+						"band"
+					],
+					"path": [
+						"api",
+						"v1",
+						"products"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "limit",
+							"value": "50"
+						},
+						{
+							"key": "category",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Product by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://coffeeshop.academy.effective.band/api/v1/products/1",
+					"protocol": "https",
+					"host": [
+						"coffeeshop",
+						"academy",
+						"effective",
+						"band"
+					],
+					"path": [
+						"api",
+						"v1",
+						"products",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All categories",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://coffeeshop.academy.effective.band/api/v1/products/categories",
+					"protocol": "https",
+					"host": [
+						"coffeeshop",
+						"academy",
+						"effective",
+						"band"
+					],
+					"path": [
+						"api",
+						"v1",
+						"products",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Make order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"positions\": {\n        \"1\": 12,\n        \"2\": 2\n    },\n    \"token\": \"\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://coffeeshop.academy.effective.band/api/v1/orders",
+					"protocol": "https",
+					"host": [
+						"coffeeshop",
+						"academy",
+						"effective",
+						"band"
+					],
+					"path": [
+						"api",
+						"v1",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
