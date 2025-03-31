@@ -1,3 +1,4 @@
+import 'package:coffeeshop/data/items.dart';
 import 'package:flutter/material.dart';
 import 'package:coffeeshop/globals.dart';
 import 'package:coffeeshop/widgets/ListCreator.dart';
@@ -17,11 +18,7 @@ class CoffeeMenu extends StatefulWidget {
 class CoffeeMenuState extends State<CoffeeMenu> {
   final GlobalKey<ListCreatorState> listCreatorKey = GlobalKey<ListCreatorState>();
   final ScrollController _ScrollController1 = ScrollController();
-  final GlobalKey milkCoffeeKey = GlobalKey();
-  final GlobalKey blackCoffeeKey = GlobalKey();
-  final GlobalKey coldBrewKey = GlobalKey();
-  final GlobalKey hotChocolateKey = GlobalKey();
-  final GlobalKey teaKey = GlobalKey();
+
 
   double scrollOffset = 0; 
 
@@ -31,11 +28,7 @@ class CoffeeMenuState extends State<CoffeeMenu> {
   void initState() {
     super.initState();
     categoryKeys = {
-      'Кофе с молоком': milkCoffeeKey,
-      'Черный кофе': blackCoffeeKey,
-      'Колд брю': coldBrewKey,
-      'Горячий шоколад': hotChocolateKey,
-      'Чай': teaKey,
+      for (var name in categories.values) name: GlobalKey()
     };
   }
 
@@ -43,7 +36,7 @@ class CoffeeMenuState extends State<CoffeeMenu> {
   Widget build(BuildContext context) {
     
      _ScrollController1.addListener(() {
-     pos1  = _ScrollController1.position.pixels;
+     /*pos1  = _ScrollController1.position.pixels;
       if (scrollableFlag) {
     if (pos1 < 91.5) {
       listCreatorKey.currentState?.updateSelectedCategory('Кофе с молоком');
@@ -60,7 +53,7 @@ class CoffeeMenuState extends State<CoffeeMenu> {
     if (pos1 > 689.0) {
       listCreatorKey.currentState?.updateSelectedCategory('Чай');
     }
-      }
+      }*/
   });
     
     return Scaffold(
@@ -83,41 +76,16 @@ class CoffeeMenuState extends State<CoffeeMenu> {
               ),
           ),
           ),
-          SliverToBoxAdapter(
-            child: Container(
-              key: milkCoffeeKey,
-              child: CustomTextWidget(text: "Кофе с молоком"),
+          for (var entry in categories.entries) ...[
+            SliverToBoxAdapter(
+              child: Container(
+                key: categoryKeys[entry.value],
+                child: CustomTextWidget(text: entry.value),
+              ),
             ),
-          ),
-          builderGridSliverUniversal(1, 2),
-          SliverToBoxAdapter(
-            child: Container(
-              key: blackCoffeeKey,
-              child: CustomTextWidget(text: "Черный кофе"),
-            ),
-          ),
-          builderGridSliverUniversal(2, 2),
-          SliverToBoxAdapter(
-            child: Container(
-              key: coldBrewKey,
-              child: CustomTextWidget(text: "Колд брю"),
-            ),
-          ),
-          builderGridSliverUniversal(3, 3),
-          SliverToBoxAdapter(
-            child: Container(
-              key: hotChocolateKey,
-              child: CustomTextWidget(text: "Горячий шоколад"),
-            ),
-          ),
-          builderGridSliverUniversal(4, 2),
-          SliverToBoxAdapter(
-            child: Container(
-              key: teaKey,
-              child: CustomTextWidget(text: "Чай"),
-            ),
-          ),
-         builderGridSliverUniversal(5, 2),
+            builderGridSliverUniversal(entry.key ?? 0, categorizedItems[entry.key]?.length ?? 0),
+          ],
+          
         ],
       ),
 

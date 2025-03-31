@@ -65,7 +65,8 @@ Widget build(BuildContext context) {
                   if (targetKey != null) {
                     Scrollable.ensureVisible(
                       targetKey.currentContext!,
-                      duration: Duration(milliseconds: 700) 
+                      duration: Duration(milliseconds: 1500) ,
+                      curve: Curves.easeInOut
                     );
                   }
                 }

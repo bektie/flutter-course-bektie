@@ -35,11 +35,18 @@ class BuildCoffeeCardState extends State<buildCoffeeCard> {
       children: [
           Align(
           alignment: Alignment.center,
-          child: Image.network(
-          widget.image,
-          width: 100,
-          height: 100,
-        ),
+          child: 
+            widget.image.startsWith('http')
+            ? Image.network(
+                widget.image,
+                width: 100,
+                height: 100,
+              )
+            : Image.asset(
+                widget.image,
+                width: 100,
+                height: 100,
+              ),
         ),
         Align(
           alignment: Alignment.center,

@@ -45,8 +45,6 @@ Future<void> getData() async {
 
         localCategorizedItems[categoryId]!.add(productData);
       }
-
-    print(localCategorizedItems);
     
   } catch (e) {
     print(e);
