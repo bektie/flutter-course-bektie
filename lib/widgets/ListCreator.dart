@@ -16,12 +16,15 @@ class ListCreator extends StatefulWidget {
 class ListCreatorState extends State<ListCreator> {
   int selectedIndex = 0; 
   final ScrollController _ScrollController = ScrollController();
-  final List<String> categories = [
-    'Кофе с молоком', 'Черный кофе', 'Колд брю', 'Горячий шоколад', 'Чай'
-  ];
 
 void updateSelectedCategory(String categoryName) {
-    final index = categories.indexOf(categoryName);
+  int index = -1;
+    for (final element in categories.entries) {
+      if (element.value == categoryName) {
+        index = element.key;
+         break;
+      }
+    }
     if (index != -1 && index != selectedIndex) {
       setState(() {
         selectedIndex = index;
@@ -45,8 +48,9 @@ Widget build(BuildContext context) {
       scrollDirection: Axis.horizontal, 
       children: [
         Row(
-          children: categories.map((category) {
-            int index = categories.indexOf(category);
+          children: categories.entries.map((entry) {
+            final int index = entry.key;
+            final String category = entry.value;
             bool isSelected = index == selectedIndex;
             return GestureDetector(
               onTap: () {
@@ -96,8 +100,9 @@ Widget build(BuildContext context) {
       scrollDirection: Axis.horizontal, 
       children: [
         Row(
-          children: categories.map((category) {
-            int index = categories.indexOf(category);
+          children: categories.entries.map((entry) {
+            final int index = entry.key;
+            final String category = entry.value;
             bool isSelected = index == selectedIndex;
             return GestureDetector(
               onTap: () async {
