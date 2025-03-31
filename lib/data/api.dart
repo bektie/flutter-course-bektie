@@ -19,7 +19,7 @@ Future<void> getData() async {
     localCategories = {
       for (var item in data) item['id']: item['slug'],
     };
-    print(localCategories);
+    localCategories.remove(11);
 
     
     final responseProducts = await dio.get('http://coffeeshop.academy.effective.band/api/v1/products');
@@ -48,5 +48,7 @@ Future<void> getData() async {
     
   } catch (e) {
     print(e);
+     // ignore: unused_local_variable
+     bool buildCustoms = false;
   }
 }

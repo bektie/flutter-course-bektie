@@ -7,3 +7,4 @@ double deltaPos = 2.603;
 double globalPos = 0;
 bool scrollableFlag = true;
 final categories = localCategories;
+bool buildCustoms = true;

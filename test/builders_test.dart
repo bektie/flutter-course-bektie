@@ -25,11 +25,11 @@ void main () {
 
 
   testWidgets('checking for placeholder', (tester) async {
-  milkCoffeeItems = [];
+  categorizedItems = {};
 
   await tester.pumpWidget(MaterialApp(
     home: CustomScrollView(
-      slivers: [builderGridSliverMilkCoffee(2)],
+      slivers: [builderGridSliverUniversal(1, 3)],
     ),
   ));
   await tester.pumpAndSettle();

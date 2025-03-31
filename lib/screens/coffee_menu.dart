@@ -53,7 +53,7 @@ class CoffeeMenuState extends State<CoffeeMenu> {
     if (pos1 > 689.0) {
       listCreatorKey.currentState?.updateSelectedCategory('Чай');
     }
-      }*/
+      }*/ //РЕАЛИЗОВАТЬ ПРОКРУТКУ СПИСКА ДИНАМИЧЕСКИ
   });
     
     return Scaffold(
