@@ -1,5 +1,7 @@
 import 'package:coffeeshop/data/api.dart';
 
+
+double globalPrice = 0;
 double pos1 = 0;
 double pos2 = 0;
 bool flag = false;

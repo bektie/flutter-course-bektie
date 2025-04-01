@@ -1,4 +1,7 @@
+import 'package:coffeeshop/bloc/basket_bloc.dart';
+import 'package:coffeeshop/globals.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'PriceIcons.dart';
 
 class buildCoffeeCard extends StatefulWidget {
@@ -17,6 +20,7 @@ class buildCoffeeCard extends StatefulWidget {
 
 class BuildCoffeeCardState extends State<buildCoffeeCard> {
   final transit = GlobalKey();
+  
   bool showPriceIcons = false;
   @override
   Widget build(BuildContext context) {
@@ -71,9 +75,12 @@ class BuildCoffeeCardState extends State<buildCoffeeCard> {
                 child: Text(widget.price, style: TextStyle(color: Colors.white),),
                 onPressed: () {
                   setState(() {
+                    globalPrice += double.parse(widget.price);
+                    context.read<BasketBloc>().add(AddBasketPrice(double.parse(widget.price)));
                     showPriceIcons = true;
                   });
                 },
+                
               )
             )
         )

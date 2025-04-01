@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'screens/coffee_menu.dart';
 import 'data/api.dart';
 import 'screens/error_loading_screen.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'bloc/basket_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,6 +12,12 @@ void main() async {
   if (!buildCustoms) {
     runApp(MaterialApp(home: ErrorLoadScreen()));
     return;
-  }
-  runApp(MaterialApp(home: CoffeeMenu()));
+  } else {
+  runApp(
+    BlocProvider(
+      create: (_) => BasketBloc(),
+      child: MaterialApp(home: CoffeeMenu()),
+    ),
+  );
+}
 }
