@@ -21,7 +21,7 @@ class CoffeeMenuState extends State<CoffeeMenu> {
   final ScrollController _ScrollController1 = ScrollController();
 
 
-  double scrollOffset = 0; 
+  final double scrollOffset = 0; 
 
   late Map<String, GlobalKey> categoryKeys;
 

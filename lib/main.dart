@@ -1,23 +1,20 @@
-import 'package:coffeeshop/globals.dart';
+import 'package:coffeeshop/bloc/blocs/category_bloc.dart';
 import 'package:flutter/material.dart';
-import 'screens/coffee_menu.dart';
-import 'data/api.dart';
-import 'screens/error_loading_screen.dart';
+import 'UI/screens/coffee_menu.dart';
+import 'bloc/blocs/mainBloc_observer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'bloc/basket_bloc.dart';
+import 'bloc/blocs/basket_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await getData();
-  if (!buildCustoms) {
-    runApp(MaterialApp(home: ErrorLoadScreen()));
-    return;
-  } else {
+  Bloc.observer = const MainblocObserver();
   runApp(
-    BlocProvider(
-      create: (_) => BasketBloc(),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => BasketBloc()),
+        BlocProvider(create: (_) => CategoryBloc()),
+      ],
       child: MaterialApp(home: CoffeeMenu()),
     ),
   );
-}
 }

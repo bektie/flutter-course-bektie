@@ -1,5 +1,4 @@
 import 'package:coffeeshop/bloc/basket_bloc.dart';
-import 'package:coffeeshop/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'PriceIcons.dart';
@@ -20,14 +19,21 @@ class buildCoffeeCard extends StatefulWidget {
 
 class BuildCoffeeCardState extends State<buildCoffeeCard> {
   final transit = GlobalKey();
-  
+  int counterPrice = 1;
   bool showPriceIcons = false;
+  late double price;
+
+  @override
+  void initState() {
+    super.initState();
+    price = double.parse(widget.price);
+  }
+
   @override
   Widget build(BuildContext context) {
-  double indL = (widget.index % 2 == 0) ? 16 : 8; 
-  double indR = (widget.index % 2 == 1) ? 16 : 8; 
+  
   return Container(
-    margin: EdgeInsets.only(top: 16, bottom: 16, left: indL, right: indR),
+    margin: EdgeInsets.only(top: 16, bottom: 16, left: 8, right: 8),
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(15),
@@ -75,12 +81,11 @@ class BuildCoffeeCardState extends State<buildCoffeeCard> {
                 child: Text(widget.price, style: TextStyle(color: Colors.white),),
                 onPressed: () {
                   setState(() {
-                    globalPrice += double.parse(widget.price);
-                    context.read<BasketBloc>().add(AddBasketPrice(double.parse(widget.price)));
+                    counterPrice = 1;
+                    context.read<BasketBloc>().add(SetBasketPrice(double.parse(widget.price), counterPrice));
                     showPriceIcons = true;
                   });
-                },
-                
+                },             
               )
             )
         )
@@ -89,6 +94,3 @@ class BuildCoffeeCardState extends State<buildCoffeeCard> {
   );
 }
   }
-
-
-

@@ -15,14 +15,14 @@ class CustomTextWidget extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.only(top: 16, left: 8),
         child: Text(
-     text,
+          text,
           style: TextStyle(
             fontSize: 27,
             fontWeight: FontWeight.bold
             )
           ),
-         )
-       );
+       )
+     );
   }
 }
 

@@ -1,24 +1,8 @@
-import 'package:coffeeshop/data/api.dart';
+import 'package:coffeeshop/repositories/product_repository.dart';
+import 'package:coffeeshop/repositories/category_repository.dart';
 
-class CoffeeItem {
-  final int categoryId;
-  final int id;
-  final String name;
-  final String price;
-  final String image;
+final categoryRepository = CategoryRepository();
+final categories = categoryRepository.fetchCategories();
 
-  CoffeeItem({
-    required this.categoryId,
-    required this.id,
-    required this.name,
-    required this.price,
-    required this.image
-  });
-
-  @override
-  String toString() {
-    return 'CoffeeItem(id: $id, name: $name, price: $price, image: $image)';
-  }
-}
-
-Map<int, List<CoffeeItem>> categorizedItems = localCategorizedItems;
+final productRepository = ProductRepository();
+final products = productRepository.fetchProducts();
