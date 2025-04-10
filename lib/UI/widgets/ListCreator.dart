@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../globals.dart';
-import 'package:coffeeshop/screens/coffee_menu.dart';
+
 
 class ListCreator extends StatefulWidget {
   final double scrollOffset; 

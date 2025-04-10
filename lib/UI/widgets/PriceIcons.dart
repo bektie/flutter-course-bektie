@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:coffeeshop/bloc/blocs/basket_bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:coffeeshop/bloc/blocs/price_icons_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PriceIcons extends StatelessWidget {
@@ -7,14 +8,17 @@ class PriceIcons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BasketBloc, int>(
+    return BlocBuilder<PriceBloc, int>(
       builder: (context, counter) {
         return Row(
           children: [
             IconButton(
               padding: EdgeInsets.only(bottom: 10),
               onPressed: () {
-                context.read<BasketBloc>().add(Decrement());
+                context.read<PriceBloc>().add(Decrement());
+                if (counter < 0) {
+                  context.read<BasketBloc>().add(RemoveFromBasket(0));
+                }
               },
               icon: Icon(Icons.remove),
             ),
@@ -39,7 +43,7 @@ class PriceIcons extends StatelessWidget {
             IconButton(
               padding: EdgeInsets.only(bottom: 10),
               onPressed: () {
-                context.read<BasketBloc>().add(Increment());
+                context.read<PriceBloc>().add(Increment());
               },
               icon: Icon(Icons.add),
             ),

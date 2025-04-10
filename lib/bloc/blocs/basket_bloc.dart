@@ -1,19 +1,47 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:coffeeshop/bloc/blocs/coffee_card_cubit.dart';
+import 'package:coffeeshop/bloc/blocs/price_icons_bloc.dart';
+
+
 
 abstract class BasketEvent {}
 
-class Increment extends BasketEvent {}
+class AddToBasket extends BasketEvent {
+  final double price;
+  AddToBasket(this.price);
+}
 
-class Decrement extends BasketEvent {}
+class RemoveFromBasket extends BasketEvent {
+  final double price;
+  RemoveFromBasket(this.price);
+}
 
-class BasketBloc extends Bloc<BasketEvent, int> {
-  BasketBloc() : super(0) {
-    on<Increment>((event, emit) {
-      emit(state + 1);
+class BasketBloc extends Bloc<BasketEvent, BasketState> {
+  double totalPrice = 0.0;
+  final PriceIconsBloc priceBloc = PriceIconsBloc();
+
+  BasketBloc() : super(BasketState(0.0)) {
+    on<AddToBasket>((event, emit) {
+      totalPrice += event.price;
+      emit(BasketState(totalPrice));
     });
 
-    on<Decrement>((event, emit) {
-      emit(state > 0 ? state - 1 : 0);
+    on<RemoveFromBasket>((event, emit) {
+      totalPrice -= event.price;
+      emit(BasketState(totalPrice));
+      if (PriceBloc().state == 0.0) {
+        priceBloc.hide();
+      }
     });
   }
+ 
+}
+
+class BasketState extends Equatable {
+  final double totalPrice;
+
+  BasketState(this.totalPrice);
+
+  List<Object> get props => [totalPrice];
 }

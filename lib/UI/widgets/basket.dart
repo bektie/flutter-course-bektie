@@ -2,14 +2,7 @@ import 'package:coffeeshop/bloc/blocs/basket_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class Basket extends StatefulWidget {
-  const Basket({Key? key}) : super(key: key);
-
-  @override
-  _BasketState createState() => _BasketState();
-}
-
-class _BasketState extends State<Basket> {
+class Basket extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -28,11 +21,15 @@ class _BasketState extends State<Basket> {
             ),
             Padding(
               padding: EdgeInsets.only(left: 8),
-              child: BlocBuilder<BasketBloc, double>(
+              child: BlocBuilder<BasketBloc, BasketState>(
                 builder: (context, state) {
                   return Text(
-                    state.toStringAsFixed(2),
-                    style: TextStyle(fontSize: 15, color: Colors.white),
+                    state.totalPrice.toStringAsFixed(2),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   );
                 },
               ),

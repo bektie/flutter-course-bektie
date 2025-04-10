@@ -1,18 +1,9 @@
+import 'package:coffeeshop/bloc/blocs/basket_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'PriceIcons.dart';
+import 'package:coffeeshop/bloc/blocs/coffee_card_cubit.dart';
 
-
-abstract class PriceIconsState {}
-class ShowPriceIcons extends PriceIconsState {}
-class HidePriceIcons extends PriceIconsState {}
-
-class PriceIconsBloc extends Cubit<PriceIconsState> {
-  PriceIconsBloc() : super(HidePriceIcons());
-
-  void show() => emit(ShowPriceIcons());
-  void hide() => emit(HidePriceIcons());
-}
 
 class CoffeeCard extends StatelessWidget {
   final String name;
@@ -30,8 +21,15 @@ class CoffeeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => PriceIconsBloc(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => PriceIconsBloc(),
+        ),
+       BlocProvider(
+          create: (context) => BasketBloc(),
+        ),
+      ],
       child: Container(
         padding: const EdgeInsets.only(top: 16, bottom: 16, left: 8, right: 8),
         decoration: BoxDecoration(
@@ -73,6 +71,8 @@ class CoffeeCard extends StatelessWidget {
                         child: Text(price, style: const TextStyle(color: Colors.white)),
                         onPressed: () {
                           context.read<PriceIconsBloc>().show();
+                          final parsedPrice = double.tryParse(price) ?? 0;
+                          context.read<BasketBloc>().add(AddToBasket(parsedPrice));
                         },
                       );
                     }
@@ -82,7 +82,7 @@ class CoffeeCard extends StatelessWidget {
             ),
           ],
         ),
-      ),
+      ),  
     );
   }
 }
