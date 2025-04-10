@@ -1,4 +1,5 @@
 import 'package:coffeeshop/bloc/blocs/top_level_blocs/category_bloc.dart';
+import 'package:coffeeshop/bloc/blocs/top_level_blocs/mainScreen_bloc.dart';
 import 'package:coffeeshop/bloc/blocs/top_level_blocs/product_bloc.dart';
 import 'package:coffeeshop/repositories/category_repository.dart';
 import 'package:coffeeshop/repositories/product_repository.dart' show ProductRepository;
@@ -28,10 +29,14 @@ void main() async {
             create: (context) => CategoryBloc(
               RepositoryProvider.of<CategoryRepository>(context),
             ),
-      )
+        ),
       ],
-        child: MaterialApp(home: MainMenu()),
+        child: MaterialApp(home: BlocProvider(
+          create: (_) => MainScreenBloc()..add(MainScreenEvent()),
+          child: MainMenu(),
+          ),
+        ),
       ),
-      )
+    )
   );
 }
