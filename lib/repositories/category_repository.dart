@@ -13,9 +13,7 @@ class CategoryRepository {
     final response = await dio.get(categoriesUrl);
     
     final List data = response.data['data'];
-    if (data.isEmpty) {
-      throw Exception('Сервер вернул пустой список категорий');
-    }
+    
     final categories = data.map((json) => CategoryDto.fromJson(json).toModel()).toList();
     categories.removeLast();
 

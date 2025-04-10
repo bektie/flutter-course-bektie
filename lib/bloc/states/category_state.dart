@@ -1,5 +1,6 @@
 import 'package:coffeeshop/data/category_model.dart';
 
+
 abstract class CategoryState {}
 
 class CategoryInit extends CategoryState {}
@@ -15,4 +16,5 @@ class CategoryLoaded extends CategoryState {
 class CategoryError extends CategoryState {
   final String error;
   CategoryError(this.error);
+
 }

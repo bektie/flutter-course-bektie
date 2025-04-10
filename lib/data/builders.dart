@@ -1,10 +1,8 @@
-import 'package:coffeeshop/widgets/buildCoffeeCard.dart';
 import 'package:flutter/material.dart';
 
 
-
   SliverGrid builderGridSliverUniversal(int categoryId, int itemCount) {
-  final items = categorizedItems[categoryId] ?? [];
+    
 
   return SliverGrid(
     delegate: SliverChildBuilderDelegate(

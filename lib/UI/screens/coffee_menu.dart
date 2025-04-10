@@ -1,10 +1,6 @@
-import 'package:coffeeshop/data/items.dart';
 import 'package:flutter/material.dart';
 import 'package:coffeeshop/globals.dart';
-import 'package:coffeeshop/widgets/ListCreator.dart';
-import '/widgets/CustomTextWidget.dart';
 import 'package:coffeeshop/data/builders.dart';
-import 'package:coffeeshop/widgets/basket.dart';
 
 
 class CoffeeMenu extends StatefulWidget {
@@ -36,26 +32,7 @@ class CoffeeMenuState extends State<CoffeeMenu> {
   @override
   Widget build(BuildContext context) {
     
-     _ScrollController1.addListener(() {
-     /*pos1  = _ScrollController1.position.pixels;
-      if (scrollableFlag) {
-    if (pos1 < 91.5) {
-      listCreatorKey.currentState?.updateSelectedCategory('Кофе с молоком');
-    }
-    if (pos1 < 408 && pos1 > 143.0) {
-      listCreatorKey.currentState?.updateSelectedCategory('Черный кофе');
-    }
-    if (pos1 < 570.0&&pos1>408.0) {
-      listCreatorKey.currentState?.updateSelectedCategory('Колд брю');
-    }
-    if (pos1 < 689.0&&pos1>570.0) {
-      listCreatorKey.currentState?.updateSelectedCategory('Горячий шоколад');
-    } 
-    if (pos1 > 689.0) {
-      listCreatorKey.currentState?.updateSelectedCategory('Чай');
-    }
-      }*/ //РЕАЛИЗОВАТЬ ПРОКРУТКУ СПИСКА ДИНАМИЧЕСКИ
-  });
+     _ScrollController1.addListener(() {});
     
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 235, 246, 255),

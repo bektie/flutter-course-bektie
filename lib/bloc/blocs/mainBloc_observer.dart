@@ -12,4 +12,10 @@ class MainblocObserver extends BlocObserver {
      log('onEvent $event');
   }
 
+  @override
+  void onError(BlocBase<dynamic> bloc, Object error, StackTrace stackTrace) {
+    super.onError(bloc, error, stackTrace);
+    log('onError $error');
+  }
+
 }
