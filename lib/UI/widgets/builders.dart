@@ -1,20 +1,23 @@
 import 'package:coffeeshop/UI/widgets/coffee_card.dart';
-import 'package:coffeeshop/data/items.dart';
+import 'package:coffeeshop/data/models/product_model.dart';
 import 'package:flutter/material.dart';
 
 
-  SliverGrid builderGridSliverUniversal(int categoryId, int itemCount) {
+  SliverGrid builderGridSliverUniversal(int categoryId, int itemCount, List<ProductModel> products) {
+    dynamic filteredProducts = products
+      .where((product) => product.categoryId == categoryId)
+      .toList();
+
   return SliverGrid(
     delegate: SliverChildBuilderDelegate(
       (context, index) {
         try {
-          final coffeeIndex = index % items.length;
-          final coffee = products;
+          final coffee = filteredProducts[index];
           return CoffeeCard(
             name: coffee.name,
             price: coffee.price,
             image: coffee.image,
-            index: coffeeIndex,
+            index: index,
           );
         } catch (_) {
           return CoffeeCard(
@@ -25,7 +28,7 @@ import 'package:flutter/material.dart';
           );
         }
       },
-      childCount: itemCount,
+      childCount: filteredProducts.length,
     ),
     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
       crossAxisCount: 2,

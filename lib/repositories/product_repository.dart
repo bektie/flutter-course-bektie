@@ -1,5 +1,5 @@
-import 'package:coffeeshop/data/product_dto.dart';
-import 'package:coffeeshop/data/product_model.dart';
+import 'package:coffeeshop/data/DTO/product_dto.dart';
+import 'package:coffeeshop/data/models/product_model.dart';
 import 'package:coffeeshop/globals.dart';
 import 'package:dio/dio.dart';
 import 'package:coffeeshop/repositories/mappers/product_mapper.dart';

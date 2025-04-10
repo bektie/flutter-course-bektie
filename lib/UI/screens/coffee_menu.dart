@@ -1,75 +1,83 @@
+import 'package:coffeeshop/UI/widgets/CustomTextWidget.dart';
+import 'package:coffeeshop/UI/widgets/ListCreator.dart';
+import 'package:coffeeshop/UI/widgets/basket.dart';
+import 'package:coffeeshop/bloc/blocs/top_level_blocs/category_bloc.dart';
+import 'package:coffeeshop/bloc/states/category_state.dart';
+import 'package:coffeeshop/data/models/product_model.dart';
 import 'package:flutter/material.dart';
-import 'package:coffeeshop/globals.dart';
-import 'package:coffeeshop/data/builders.dart';
-import 'package:coffeeshop/data/items.dart';
+import 'package:coffeeshop/UI/widgets/builders.dart';
+import 'package:collection/collection.dart';
+import 'package:coffeeshop/bloc/blocs/top_level_blocs/product_bloc.dart';
+import 'package:coffeeshop/bloc/states/product_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+List<ProductModel> products = [];
+dynamic categories = [];
 
-class CoffeeMenu extends StatefulWidget {
+class CoffeeMenu extends StatelessWidget {
   const CoffeeMenu({super.key});
-  @override
-  CoffeeMenuState createState() => CoffeeMenuState();
-}
-
-class CoffeeMenuState extends State<CoffeeMenu> {
-  final GlobalKey<ListCreatorState> listCreatorKey = GlobalKey<ListCreatorState>();
-  final ScrollController _ScrollController1 = ScrollController();
-
-
-  final double scrollOffset = 0; 
-
-  late Map<String, GlobalKey> categoryKeys;
-
-  @override
-  void initState() {
-    super.initState();
-    categoryKeys = {
-      for (var name in categories.values) name: GlobalKey()
-    };
-  }
 
   @override
   Widget build(BuildContext context) {
-    
-     _ScrollController1.addListener(() {});
-    
-    return Scaffold(
-      backgroundColor: Color.fromARGB(255, 235, 246, 255),
-      body: Stack(
-        children: [
-          CustomScrollView(
-            controller: _ScrollController1,
-            slivers: [
-              SliverAppBar(
-                pinned: true,
-                elevation: 0,
-                forceElevated: false,
-                backgroundColor: Color.fromARGB(255, 235, 246, 255),
-                flexibleSpace: FlexibleSpaceBar(
-                  collapseMode: CollapseMode.none,
-                  stretchModes: const [], 
-                  background: Container(
-                    color: Color.fromARGB(255, 235, 246, 255),
-                    child: Center(child: ListCreator(key: listCreatorKey, scrollOffset: scrollOffset)), 
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<CategoryBloc, CategoryState>(
+          listener: (context, state) {
+            if (state is CategoryLoaded) {
+              categories = state.categories;
+            }
+          },
+        )
+      ],
+      child: BlocConsumer<ProductBloc, ProductState>(
+        listener: (context, state) {
+          if (state is ProductLoadedBase) {
+            products = state.products;
+          }
+        },
+        builder: (context, state) => Scaffold(
+          backgroundColor: Color.fromARGB(255, 235, 246, 255),
+          body: Stack(
+            children: [
+              CustomScrollView(
+                slivers: [
+                  SliverAppBar(
+                    pinned: true,
+                    elevation: 0,
+                    forceElevated: false,
+                    backgroundColor: Color.fromARGB(255, 235, 246, 255),
+                    flexibleSpace: FlexibleSpaceBar(
+                      collapseMode: CollapseMode.none,
+                      stretchModes: const [],
+                      background: Container(
+                        color: Color.fromARGB(255, 235, 246, 255),
+                        child: Center(child: ListCreator(categories)),
+                      ),
+                    ),
                   ),
-              ),
-              ),
-              for (var entry in categories.entries) ...[
-                SliverToBoxAdapter(
-                  child: Container(
-                    key: categoryKeys[entry.value],
-                    child: CustomTextWidget(text: entry.value),
+                  for (int i = 0;i<categories.length;i++)...{
+                    SliverToBoxAdapter(
+                    child: Container(
+                      key: categories[i][0],
+                      child: CustomTextWidget(text: categories[i][1])
+                    ),
                   ),
-                ),
-                builderGridSliverUniversal(entry.key ?? 0, categorizedItems[entry.key]?.length ?? 0),
-              ],
+                  builderGridSliverUniversal(categories[i][0], 
+                  (groupBy(products, (product) => product.categoryId)
+                      .map((key, value) => MapEntry(key, value.length)))[categories[i][0]] ?? 0,
+                      products
+                      )
+                  }
+                ],
+              ),
+              Positioned(
+                bottom: 20,
+                right: 20,
+                child: Basket(),
+              ),
             ],
           ),
-          Positioned(
-            bottom: 20,
-            right: 20,
-            child: Basket() 
-          ),
-        ],
+        ),
       ),
     );
   }

@@ -1,4 +1,4 @@
-import 'package:coffeeshop/data/category_model.dart';
+import 'package:coffeeshop/data/models/category_model.dart';
 
 
 abstract class CategoryState {}
@@ -9,7 +9,6 @@ class CategoryLoading extends CategoryState {}
 
 class CategoryLoaded extends CategoryState {
   final List<CategoryModel> categories;
-
   CategoryLoaded(this.categories);
 }
 

@@ -1,15 +1,15 @@
-import 'package:coffeeshop/bloc/blocs/basket_bloc.dart';
+import 'package:coffeeshop/bloc/blocs/low_level_blocs/basket_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'PriceIcons.dart';
-import 'package:coffeeshop/bloc/blocs/coffee_card_cubit.dart';
+import 'package:coffeeshop/bloc/blocs/low_level_blocs/coffee_card_cubit.dart';
 
 
 class CoffeeCard extends StatelessWidget {
   final String name;
   final String price;
   final String image;
-  final int index;
+  final num index;
 
   const CoffeeCard({
     super.key,

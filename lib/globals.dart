@@ -8,3 +8,5 @@ bool scrollableFlag = true;
 final productsUrl = 'http://coffeeshop.academy.effective.band/api/v1/products';
 final categoriesUrl = 'http://coffeeshop.academy.effective.band/api/v1/products/categories';
 bool buildCustoms = true;
+
+

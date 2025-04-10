@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:coffeeshop/bloc/blocs/coffee_card_cubit.dart';
-import 'package:coffeeshop/bloc/blocs/price_icons_bloc.dart';
+import 'package:coffeeshop/bloc/blocs/low_level_blocs/coffee_card_cubit.dart';
+import 'package:coffeeshop/bloc/blocs/low_level_blocs/price_icons_bloc.dart';
 
 
 

@@ -1,4 +1,4 @@
-import 'package:coffeeshop/data/product_model.dart';
+import 'package:coffeeshop/data/models/product_model.dart';
 
 
 abstract class ProductState {}
@@ -8,9 +8,17 @@ class ProductLoading extends ProductState {
   ProductLoading();
 }
 
-class ProductLoaded extends ProductState {
+abstract class ProductLoadedBase extends ProductState {
   final List<ProductModel> products;
-  ProductLoaded(this.products);
+  ProductLoadedBase(this.products);
+}
+
+class ProductLoaded extends ProductLoadedBase {
+  ProductLoaded(List<ProductModel> products) : super(products);
+}
+
+class ProductLoadedMore extends ProductLoadedBase {
+  ProductLoadedMore(List<ProductModel> products) : super(products);
 }
 
 class ProductError extends ProductState {
@@ -20,10 +28,6 @@ class ProductError extends ProductState {
 
 class ProductLoadingMore extends ProductState {}
 
-class ProductLoadedMore extends ProductState {
-  final List<ProductModel> products;
-  ProductLoadedMore(this.products);
-}
 
 class ProductLoadingMoreError extends ProductState {
   final String error;

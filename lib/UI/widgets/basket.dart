@@ -1,4 +1,4 @@
-import 'package:coffeeshop/bloc/blocs/basket_bloc.dart';
+import 'package:coffeeshop/bloc/blocs/low_level_blocs/basket_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

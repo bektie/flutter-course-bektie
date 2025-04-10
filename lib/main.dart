@@ -1,10 +1,10 @@
-import 'package:coffeeshop/bloc/blocs/category_bloc.dart';
-import 'package:coffeeshop/bloc/blocs/product_bloc.dart';
+import 'package:coffeeshop/bloc/blocs/top_level_blocs/category_bloc.dart';
+import 'package:coffeeshop/bloc/blocs/top_level_blocs/product_bloc.dart';
 import 'package:coffeeshop/repositories/category_repository.dart';
 import 'package:coffeeshop/repositories/product_repository.dart' show ProductRepository;
 import 'package:flutter/material.dart';
 import 'UI/screens/main_menu.dart';
-import 'bloc/blocs/mainBloc_observer.dart';
+import 'bloc/blocs/top_level_blocs/mainBloc_observer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 
@@ -31,7 +31,7 @@ void main() async {
       )
       ],
         child: MaterialApp(home: MainMenu()),
-      ),)
-      
+      ),
+      )
   );
 }
