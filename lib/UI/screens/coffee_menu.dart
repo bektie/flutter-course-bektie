@@ -58,13 +58,13 @@ class CoffeeMenu extends StatelessWidget {
                   for (int i = 0;i<categories.length;i++)...{
                     SliverToBoxAdapter(
                     child: Container(
-                      key: categories[i][0],
-                      child: CustomTextWidget(text: categories[i][1])
+                      key: ValueKey(categories[i].id),
+                      child: CustomTextWidget(text: categories[i].slug)
                     ),
                   ),
-                  builderGridSliverUniversal(categories[i][0], 
+                  builderGridSliverUniversal(categories[i].id, 
                   (groupBy(products, (product) => product.categoryId)
-                      .map((key, value) => MapEntry(key, value.length)))[categories[i][0]] ?? 0,
+                      .map((key, value) => MapEntry(key, value.length)))[categories[i].id] ?? 0,
                       products
                       )
                   }

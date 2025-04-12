@@ -9,8 +9,8 @@ class CategoryDto {
 
   factory CategoryDto.fromJson(Map<String, dynamic> json) {
     return CategoryDto(
-      id: json['id'],
-      slug: json['slug']
+      id: json['id']??'',
+      slug: json['slug']??''
     );
   }
 }
