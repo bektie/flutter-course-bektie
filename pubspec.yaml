@@ -87,3 +87,18 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+  assets:
+    - assets/placeholder.jpg
+    - assets/latte.jpg
+    - assets/americano.jpg
+    - assets/capuccino.png
+    - assets/coldbrew.jpg
+    - assets/coldbrewCherry.jpg
+    - assets/espresso.jpg
+    - assets/hotchoc.jpg
+    - assets/latte.jpg
+    - assets/nitro.jpg
+    - assets/teaOblepiha.jpg
+    - assets/teaShip.jpg
+    - assets/cacao.jpg
