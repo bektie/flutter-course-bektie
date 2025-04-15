@@ -1,32 +1,35 @@
-import 'package:coffeeshop/src/features/menu/data/DTO/product_dto.dart';
-import 'package:coffeeshop/src/features/menu/data/models/product_model.dart';
-import 'package:coffeeshop/src/globals.dart';
-import 'package:dio/dio.dart';
+import 'package:coffeeshop/src/features/menu/data/data_sources/products_datasources.dart';
+import 'package:coffeeshop/src/features/menu/models/DTO/product_dto.dart';
+import 'package:coffeeshop/src/features/menu/models/models/category_model.dart';
+import 'package:coffeeshop/src/features/menu/models/models/product_model.dart';
 import 'package:coffeeshop/src/features/menu/utils/product_mapper.dart';
 
-class ProductRepository {
-  final Dio dio;
+abstract interface class IProductsRepository {
+  Future<List<ProductModel>> loadProducts({
+    required CategoryModel category,
+    int page = 0,
+    int limit = 25,
+  });
+}
 
-  ProductRepository({Dio? dio}) : dio = dio ?? Dio();
+final class ProductsRepository implements IProductsRepository {
+  final IProductsDataSource _networkProductsDataSource;
 
-  Future<List<ProductModel>> fetchProducts({
-    int page = 1,
+  ProductsRepository({required IProductsDataSource networkProductsDataSource})
+    : _networkProductsDataSource = networkProductsDataSource;
+
+  @override
+  Future<List<ProductModel>> loadProducts({
+    required CategoryModel category,
+    int page = 0,
     int limit = 25,
   }) async {
-    try {
-      final response = await dio.get(
-        productsUrl,
-        queryParameters: {'page': page, 'limit': limit},
-      );
-
-      final List data = response.data['data'];
-      if (data.isEmpty) {
-        throw Exception('Сервер вернул пустой список продуктов');
-      }
-      return data.map((json) => ProductDTO.fromJson(json).toModel()).toList();
-    } catch (e) {
-      print('Ошибка загрузки продуктов: $e');
-      rethrow;
-    }
+    List<ProductDTO> dtos = <ProductDTO>[];
+    dtos = await _networkProductsDataSource.fetchProducts(
+      categoryId: category.id,
+      page: page,
+      limit: limit,
+    );
+    return dtos.map((e) => e.toModel()).toList();
   }
 }

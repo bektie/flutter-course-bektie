@@ -1,4 +1,4 @@
-import 'package:coffeeshop/src/features/menu/data/models/category_model.dart';
+import 'package:coffeeshop/src/features/menu/models/models/category_model.dart';
 
 abstract class CategoryState {}
 

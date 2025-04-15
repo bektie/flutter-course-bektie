@@ -1,23 +1,26 @@
-import 'package:coffeeshop/src/features/menu/data/DTO/category_dto.dart';
-import 'package:coffeeshop/src/features/menu/data/models/category_model.dart';
-import 'package:coffeeshop/src/globals.dart';
-import 'package:dio/dio.dart';
+import 'package:coffeeshop/src/features/menu/data/data_sources/categories_datasource.dart';
+import 'package:coffeeshop/src/features/menu/models/DTO/category_dto.dart';
+import 'package:coffeeshop/src/features/menu/models/models/category_model.dart';
+import 'package:coffeeshop/src/features/menu/view/UI/screens/coffee_menu.dart';
 import '../../utils/category_mapper.dart';
 
-class CategoryRepository {
-  final Dio dio;
+abstract interface class ICategoriesRepository {
+  Future<List<CategoryModel>> loadCategories();
+}
 
-  CategoryRepository({Dio? dio}) : dio = dio ?? Dio();
+final class CategoriesRepository implements ICategoriesRepository {
+  final ICategoriesDataSource _networkCategoriesDataSource;
 
-  Future<List<CategoryModel>> fetchCategories() async {
-    final response = await dio.get(categoriesUrl);
+  CategoriesRepository({
+    required ICategoriesDataSource networkCategoriesDataSource,
+  }) : _networkCategoriesDataSource = networkCategoriesDataSource;
 
-    final List data = response.data['data'];
-
-    final categories =
-        data.map((json) => CategoryDto.fromJson(json).toModel()).toList();
+  @override
+  Future<List<CategoryModel>> loadCategories() async {
+    List<CategoryDto> dtos = <CategoryDto>[];
+    dtos = await _networkCategoriesDataSource.fetchCategories();
+    categories = dtos.map((e) => e.toModel()).toList();
     categories.removeLast();
-
     return categories;
   }
 }

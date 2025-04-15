@@ -3,7 +3,7 @@ import 'package:coffeeshop/src/features/menu/view/UI/widgets/ListCreator.dart';
 import 'package:coffeeshop/src/features/menu/view/UI/widgets/basket.dart';
 import 'package:coffeeshop/src/features/menu/bloc/blocs/top_level_blocs/category_bloc.dart';
 import 'package:coffeeshop/src/features/menu/bloc/states/category_state.dart';
-import 'package:coffeeshop/src/features/menu/data/models/product_model.dart';
+import 'package:coffeeshop/src/features/menu/models/models/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:coffeeshop/src/features/menu/view/UI/widgets/builders.dart';
 import 'package:collection/collection.dart';

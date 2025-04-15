@@ -1,5 +1,5 @@
-import 'package:coffeeshop/src/features/menu/data/DTO/product_dto.dart';
-import 'package:coffeeshop/src/features/menu/data/models/product_model.dart';
+import 'package:coffeeshop/src/features/menu/models/DTO/product_dto.dart';
+import 'package:coffeeshop/src/features/menu/models/models/product_model.dart';
 
 extension ProductMapper on ProductDTO {
   ProductModel toModel() {

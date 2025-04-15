@@ -1,5 +1,5 @@
-import 'package:coffeeshop/src/features/menu/data/DTO/category_dto.dart';
-import 'package:coffeeshop/src/features/menu/data/models/category_model.dart';
+import 'package:coffeeshop/src/features/menu/models/DTO/category_dto.dart';
+import 'package:coffeeshop/src/features/menu/models/models/category_model.dart';
 
 extension CategoryMapper on CategoryDto {
   CategoryModel toModel() {

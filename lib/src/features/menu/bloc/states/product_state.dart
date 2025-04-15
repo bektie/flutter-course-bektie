@@ -1,4 +1,4 @@
-import 'package:coffeeshop/src/features/menu/data/models/product_model.dart';
+import 'package:coffeeshop/src/features/menu/models/models/product_model.dart';
 
 abstract class ProductState {}
 

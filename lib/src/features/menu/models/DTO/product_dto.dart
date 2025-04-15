@@ -10,7 +10,7 @@ class ProductDTO {
     required this.name,
     required this.image,
     required this.price,
-    required this.categoryId
+    required this.categoryId,
   });
 
   factory ProductDTO.fromJson(Map<String, dynamic> json) {
@@ -19,7 +19,7 @@ class ProductDTO {
       name: json['name'],
       image: json['imageUrl'],
       price: double.parse(json['prices'][0]['value']),
-      categoryId: json['category']['id']
+      categoryId: json['category']['id'],
     );
   }
 }

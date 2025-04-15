@@ -1,6 +1,6 @@
 import 'package:coffeeshop/src/features/menu/view/UI/widgets/coffee_card.dart';
 import 'package:coffeeshop/src/features/menu/bloc/blocs/low_level_blocs/coffee_card_cubit.dart';
-import 'package:coffeeshop/src/features/menu/data/models/product_model.dart';
+import 'package:coffeeshop/src/features/menu/models/models/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
