@@ -37,7 +37,7 @@ class _ProductCardState extends State<CoffeeCard> {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    padding: const EdgeInsets.symmetric(vertical: 0),
                     child: SizedBox(
                       height: 100,
                       child: CachedNetworkImage(
@@ -53,10 +53,7 @@ class _ProductCardState extends State<CoffeeCard> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Text(
-                      widget.product.name,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
+                    child: Text(widget.product.name),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4),
@@ -126,13 +123,7 @@ class _ProductCardState extends State<CoffeeCard> {
                                               listener: (context, state) {
                                                 _quantity = 0;
                                               },
-                                              child: Text(
-                                                '$_quantity',
-                                                style:
-                                                    Theme.of(
-                                                      context,
-                                                    ).textTheme.labelSmall,
-                                              ),
+                                              child: Text('$_quantity'),
                                             ),
                                           ),
                                         ),
@@ -171,6 +162,11 @@ class _ProductCardState extends State<CoffeeCard> {
                                 ],
                               )
                               : FilledButton(
+                                style: ButtonStyle(
+                                  backgroundColor: WidgetStateProperty.all(
+                                    AppColors.lightblue,
+                                  ),
+                                ),
                                 onPressed: () {
                                   setState(() {
                                     _quantity = 1;
@@ -180,8 +176,11 @@ class _ProductCardState extends State<CoffeeCard> {
                                   );
                                 },
                                 child: Text(
-                                  '${widget.product.price.floor()} р.',
-                                  style: Theme.of(context).textTheme.bodySmall,
+                                  '${widget.product.price.floor()}',
+                                  style: TextStyle(
+                                    color: AppColors.white,
+                                    fontSize: 12,
+                                  ),
                                 ),
                               ),
                     ),

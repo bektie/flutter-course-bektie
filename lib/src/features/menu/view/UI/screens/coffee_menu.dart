@@ -85,14 +85,14 @@ class _MenuScreenState extends State<MenuScreen> {
           return SafeArea(
             child: Scaffold(
               appBar: PreferredSize(
-                preferredSize: const Size.fromHeight((94)),
+                preferredSize: const Size.fromHeight((50)),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 16, right: 20),
                   child: Column(
                     children: [
                       const Spacer(),
                       SizedBox(
-                        height: 36,
+                        height: 40,
                         child: ScrollablePositionedList.builder(
                           itemScrollController: _appBarController,
                           scrollDirection: Axis.horizontal,
@@ -178,7 +178,7 @@ class _MenuScreenState extends State<MenuScreen> {
                         color: AppColors.white,
                       ),
                       label: Text(
-                        '${state.cost.floor()} ₽',
+                        '${state.cost.floor()}',
                         style: Theme.of(context).textTheme.labelMedium,
                       ),
                     );
