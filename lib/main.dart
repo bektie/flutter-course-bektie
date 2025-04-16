@@ -1,6 +1,6 @@
 import 'package:coffeeshop/src/app.dart';
+import 'package:coffeeshop/src/features/menu/bloc/mainBloc_observer.dart';
 import 'package:flutter/material.dart';
-import 'src/features/menu/bloc/blocs/top_level_blocs/mainBloc_observer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {

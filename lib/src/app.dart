@@ -1,13 +1,12 @@
+import 'package:coffeeshop/src/features/menu/bloc/cart/cart_bloc.dart';
+import 'package:coffeeshop/src/features/menu/bloc/menu/menu_bloc.dart';
 import 'package:coffeeshop/src/features/menu/data/data_sources/categories_datasource.dart';
+import 'package:coffeeshop/src/features/menu/data/data_sources/order_data_source.dart';
 import 'package:coffeeshop/src/features/menu/data/data_sources/products_datasources.dart';
 import 'package:coffeeshop/src/features/menu/data/repositories/category_repository.dart';
+import 'package:coffeeshop/src/features/menu/data/repositories/order_repository.dart';
 import 'package:coffeeshop/src/features/menu/data/repositories/product_repository.dart';
-import 'package:coffeeshop/src/features/menu/view/UI/screens/main_menu.dart';
-import 'package:coffeeshop/src/features/menu/bloc/blocs/low_level_blocs/basket_bloc.dart';
-import 'package:coffeeshop/src/features/menu/bloc/blocs/low_level_blocs/list_bloc.dart';
-import 'package:coffeeshop/src/features/menu/bloc/blocs/top_level_blocs/category_bloc.dart';
-import 'package:coffeeshop/src/features/menu/bloc/blocs/top_level_blocs/mainScreen_bloc.dart';
-import 'package:coffeeshop/src/features/menu/bloc/blocs/top_level_blocs/product_bloc.dart';
+import 'package:coffeeshop/src/features/menu/view/UI/screens/coffee_menu.dart';
 import 'package:coffeeshop/src/theme/theme.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +17,7 @@ class CoffeeShopApp extends StatelessWidget {
   static final dioClient = Dio(
     BaseOptions(baseUrl: 'https://coffeeshop.academy.effective.band/api/v1'),
   );
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -40,30 +40,29 @@ class CoffeeShopApp extends StatelessWidget {
                   ),
                 ),
           ),
+          RepositoryProvider<IOrderRepository>(
+            create:
+                (context) => OrderRepository(
+                  networkOrderDataSource: NetworkOrdersDataSource(
+                    dio: dioClient,
+                  ),
+                ),
+          ),
         ],
         child: MultiBlocProvider(
           providers: [
             BlocProvider(
-              create:
-                  (context) => ProductBloc(
-                    RepositoryProvider.of<ProductsRepository>(context),
-                  ),
+              create: (context) => CartBloc(context.read<IOrderRepository>()),
             ),
             BlocProvider(
               create:
-                  (context) => CategoryBloc(
-                    RepositoryProvider.of<CategoriesRepository>(context),
-                  ),
+                  (context) => MenuBloc(
+                    context.read<IProductsRepository>(),
+                    context.read<ICategoriesRepository>(),
+                  )..add(const CategoryLoadingStarted()),
             ),
-            BlocProvider(create: (context) => BasketBloc()),
-            BlocProvider(create: (context) => ListBloc()),
           ],
-          child: MaterialApp(
-            home: BlocProvider(
-              create: (_) => MainScreenBloc()..add(MainScreenEvent()),
-              child: MainMenu(),
-            ),
-          ),
+          child: MaterialApp(home: MenuScreen()),
         ),
       ),
     );

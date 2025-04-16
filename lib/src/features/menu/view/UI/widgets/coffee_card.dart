@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class ProductCard extends StatefulWidget {
+class CoffeeCard extends StatefulWidget {
   final ProductModel product;
 
-  const ProductCard({super.key, required this.product});
+  const CoffeeCard({super.key, required this.product});
 
   @override
-  State<ProductCard> createState() => _ProductCardState();
+  State<CoffeeCard> createState() => _ProductCardState();
 }
 
-class _ProductCardState extends State<ProductCard> {
+class _ProductCardState extends State<CoffeeCard> {
   bool get showQuantityButtons => _quantity > 0;
 
   int _quantity = 0;
