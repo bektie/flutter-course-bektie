@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:coffeeshop/src/features/menu/data/data_sources/categories_datasource.dart';
+import 'package:coffeeshop/src/features/menu/data/data_sources/dbsource.dart';
 import 'package:coffeeshop/src/features/menu/models/DTO/category_dto.dart';
 import 'package:coffeeshop/src/features/menu/models/models/category_model.dart';
 import '../../utils/category_mapper.dart';
@@ -11,10 +12,13 @@ abstract interface class ICategoriesRepository {
 
 final class CategoriesRepository implements ICategoriesRepository {
   final ICategoriesDataSource _networkCategoriesDataSource;
+  final IDBCategories _DbCategories;
 
   CategoriesRepository({
     required ICategoriesDataSource networkCategoriesDataSource,
-  }) : _networkCategoriesDataSource = networkCategoriesDataSource;
+    required IDBCategories DbCategories,
+  }) : _networkCategoriesDataSource = networkCategoriesDataSource,
+       _DbCategories = DbCategories;
 
   @override
   Future<List<CategoryModel>> loadCategories() async {
@@ -22,7 +26,7 @@ final class CategoriesRepository implements ICategoriesRepository {
     try {
       dtos = await _networkCategoriesDataSource.fetchCategories();
     } on SocketException {
-      //takedb
+      dtos = await _DbCategories.fetchCategories();
     }
     final categories = dtos.map((e) => e.toModel()).toList();
     categories.removeLast();

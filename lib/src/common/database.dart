@@ -65,4 +65,12 @@ class DataBase {
       'categoryId': categoryId,
     }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
+
+  query(
+    String s, {
+    required String where,
+    required List<String> whereArgs,
+    required int limit,
+    required int offset,
+  }) {}
 }

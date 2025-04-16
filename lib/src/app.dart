@@ -1,6 +1,8 @@
+import 'package:coffeeshop/src/common/database.dart';
 import 'package:coffeeshop/src/features/menu/bloc/cart/cart_bloc.dart';
 import 'package:coffeeshop/src/features/menu/bloc/menu/menu_bloc.dart';
 import 'package:coffeeshop/src/features/menu/data/data_sources/categories_datasource.dart';
+import 'package:coffeeshop/src/features/menu/data/data_sources/dbsource.dart';
 import 'package:coffeeshop/src/features/menu/data/data_sources/order_data_source.dart';
 import 'package:coffeeshop/src/features/menu/data/data_sources/products_datasources.dart';
 import 'package:coffeeshop/src/features/menu/data/repositories/category_repository.dart';
@@ -30,7 +32,8 @@ class CoffeeShopApp extends StatelessWidget {
                   networkCategoriesDataSource: NetworkCategoriesDataSource(
                     dio: dioClient,
                   ),
-                ),
+                   
+                 
           ),
           RepositoryProvider<IProductsRepository>(
             create:

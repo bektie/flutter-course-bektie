@@ -39,7 +39,6 @@ final class NetworkProductsDataSource implements IProductsDataSource {
       final productDtos =
           data.map<ProductDTO>((i) => ProductDTO.fromJson(i)).toList();
 
-      // сохранить в локальную базу
       for (final dto in productDtos) {
         final product = dto.toModel();
         await DataBase.insertProduct(
