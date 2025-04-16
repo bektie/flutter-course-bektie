@@ -8,7 +8,10 @@ abstract interface class IDBCategories implements ICategoriesDataSource {}
 
 abstract interface class IDBProducts implements IProductsDataSource {}
 
-final class DbProductsDataSource {
+final class DbProductsDataSource implements IDBProducts {
+  const DbProductsDataSource({required DataBase db});
+
+  @override
   Future<List<ProductDTO>> fetchProducts({
     required int categoryId,
     int page = 0,
@@ -27,11 +30,18 @@ final class DbProductsDataSource {
 
     return result.map((e) => ProductDTO.fromJson(e)).toList();
   }
+
+  @override
+  Future<ProductDTO> fetchProduct({required int productId}) {
+    // TODO: implement fetchProduct
+    throw UnimplementedError();
+  }
 }
 
-final class DbCategoriesDataSource {
+final class DbCategoriesDataSource implements IDBCategories {
   const DbCategoriesDataSource({required DataBase db});
 
+  @override
   Future<List<CategoryDto>> fetchCategories() async {
     final db = await DataBase.database;
 

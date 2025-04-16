@@ -17,13 +17,13 @@ abstract interface class IProductsRepository {
 
 final class ProductsRepository implements IProductsRepository {
   final IProductsDataSource _networkProductsDataSource;
-  final IDBProducts _DbProducts;
+  final IDBProducts _dbProducts;
 
   ProductsRepository({
+    required IDBProducts dbProducts,
     required IProductsDataSource networkProductsDataSource,
-    required IDBProducts DbProducts,
   }) : _networkProductsDataSource = networkProductsDataSource,
-       _DbProducts = DbProducts;
+       _dbProducts = dbProducts;
 
   @override
   Future<List<ProductModel>> loadProducts({
@@ -39,7 +39,7 @@ final class ProductsRepository implements IProductsRepository {
         limit: limit,
       );
     } on SocketException {
-      dtos = await _DbProducts.fetchProducts(
+      dtos = await _dbProducts.fetchProducts(
         categoryId: category.id,
         page: page,
         limit: limit,

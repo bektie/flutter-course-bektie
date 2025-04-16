@@ -32,8 +32,8 @@ class CoffeeShopApp extends StatelessWidget {
                   networkCategoriesDataSource: NetworkCategoriesDataSource(
                     dio: dioClient,
                   ),
-                   
-                 
+                  localCategories: DbCategoriesDataSource(db: DataBase()),
+                ),
           ),
           RepositoryProvider<IProductsRepository>(
             create:
@@ -41,6 +41,7 @@ class CoffeeShopApp extends StatelessWidget {
                   networkProductsDataSource: NetworkProductsDataSource(
                     dio: dioClient,
                   ),
+                  dbProducts: DbProductsDataSource(db: DataBase()),
                 ),
           ),
           RepositoryProvider<IOrderRepository>(

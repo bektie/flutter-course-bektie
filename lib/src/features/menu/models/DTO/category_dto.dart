@@ -5,6 +5,9 @@ class CategoryDto {
   CategoryDto({required this.id, required this.slug});
 
   factory CategoryDto.fromJson(Map<String, dynamic> json) {
-    return CategoryDto(id: json['id'] ?? '', slug: json['slug'] ?? '');
+    return CategoryDto(
+      id: (json['id'] as num).toInt(),
+      slug: json['slug'] ?? '',
+    );
   }
 }

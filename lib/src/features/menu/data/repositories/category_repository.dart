@@ -12,13 +12,13 @@ abstract interface class ICategoriesRepository {
 
 final class CategoriesRepository implements ICategoriesRepository {
   final ICategoriesDataSource _networkCategoriesDataSource;
-  final IDBCategories _DbCategories;
+  final IDBCategories _localCategories;
 
   CategoriesRepository({
+    required IDBCategories localCategories,
     required ICategoriesDataSource networkCategoriesDataSource,
-    required IDBCategories DbCategories,
   }) : _networkCategoriesDataSource = networkCategoriesDataSource,
-       _DbCategories = DbCategories;
+       _localCategories = localCategories;
 
   @override
   Future<List<CategoryModel>> loadCategories() async {
@@ -26,7 +26,7 @@ final class CategoriesRepository implements ICategoriesRepository {
     try {
       dtos = await _networkCategoriesDataSource.fetchCategories();
     } on SocketException {
-      dtos = await _DbCategories.fetchCategories();
+      dtos = await _localCategories.fetchCategories();
     }
     final categories = dtos.map((e) => e.toModel()).toList();
     categories.removeLast();
