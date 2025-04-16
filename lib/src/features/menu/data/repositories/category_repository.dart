@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:coffeeshop/src/features/menu/data/data_sources/categories_datasource.dart';
 import 'package:coffeeshop/src/features/menu/models/DTO/category_dto.dart';
 import 'package:coffeeshop/src/features/menu/models/models/category_model.dart';
@@ -17,7 +19,11 @@ final class CategoriesRepository implements ICategoriesRepository {
   @override
   Future<List<CategoryModel>> loadCategories() async {
     List<CategoryDto> dtos = <CategoryDto>[];
-    dtos = await _networkCategoriesDataSource.fetchCategories();
+    try {
+      dtos = await _networkCategoriesDataSource.fetchCategories();
+    } on SocketException {
+      //takedb
+    }
     final categories = dtos.map((e) => e.toModel()).toList();
     categories.removeLast();
     return categories;

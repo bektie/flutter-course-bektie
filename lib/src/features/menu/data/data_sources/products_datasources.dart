@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:coffeeshop/src/common/database.dart';
 import 'package:coffeeshop/src/features/menu/models/DTO/product_dto.dart';
+import 'package:coffeeshop/src/features/menu/utils/product_mapper.dart';
 import 'package:dio/dio.dart';
 
 abstract interface class IProductsDataSource {
@@ -33,7 +35,23 @@ final class NetworkProductsDataSource implements IProductsDataSource {
       );
       final data = response.data['data'];
       if (data is! List) throw const FormatException();
-      return (data).map<ProductDTO>((i) => ProductDTO.fromJson(i)).toList();
+
+      final productDtos =
+          data.map<ProductDTO>((i) => ProductDTO.fromJson(i)).toList();
+
+      // сохранить в локальную базу
+      for (final dto in productDtos) {
+        final product = dto.toModel();
+        await DataBase.insertProduct(
+          id: product.id.toString(),
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          categoryId: product.categoryId.toString(),
+        );
+      }
+
+      return productDtos;
     } on DioException catch (_) {
       throw SocketException('/products with categoryId = $categoryId');
     }
