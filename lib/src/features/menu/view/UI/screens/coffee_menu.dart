@@ -87,7 +87,11 @@ class _MenuScreenState extends State<MenuScreen> {
               appBar: PreferredSize(
                 preferredSize: const Size.fromHeight((50)),
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 20),
+                  padding: const EdgeInsets.only(
+                    left: 16,
+                    right: 20,
+                    bottom: 8,
+                  ),
                   child: Column(
                     children: [
                       const Spacer(),

@@ -23,6 +23,7 @@ dependencies:
   stream_transform: ^2.1.1
   cached_network_image: ^3.3.1
   scrollable_positioned_list: ^0.3.8
+  firebase_messaging: ^15.2.5
 
 dev_dependencies:
   flutter_test:

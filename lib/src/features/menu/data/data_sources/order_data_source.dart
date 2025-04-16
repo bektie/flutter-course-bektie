@@ -19,7 +19,11 @@ final class NetworkOrdersDataSource implements IOrderDataSource {
     final positions = items.map(
       (key, value) => MapEntry(key.id.toString(), value),
     );
-    final response = await _dio.post('/orders', data: {"positions": positions});
+    final fcmToken = "<FCM Registration Token>";
+    final response = await _dio.post(
+      '/orders',
+      data: {"positions": positions, "token": fcmToken},
+    );
     return response.data;
   }
 }
