@@ -2,7 +2,7 @@ class ProductDTO {
   final int id;
   final String name;
   final String image;
-  final dynamic price;
+  final double price;
   final int categoryId;
 
   ProductDTO({
@@ -13,15 +13,25 @@ class ProductDTO {
     required this.categoryId,
   });
 
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+
+      'name': name,
+      'imageUrl': image,
+      'prices': [
+        {'value': price.toString()},
+      ],
+      'category': {'id': categoryId},
+    };
+  }
+
   factory ProductDTO.fromJson(Map<String, dynamic> json) {
     return ProductDTO(
       id: json['id'],
       name: json['name'],
       image: json['imageUrl'],
-      price:
-          (json['prices'][0]['value'] is String)
-              ? double.parse(json['prices'][0]['value']).toInt()
-              : (json['prices'][0]['value'] as num).toInt(),
+      price: double.parse(json['prices'][0]['value']),
       categoryId: json['category']['id'],
     );
   }

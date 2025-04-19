@@ -22,18 +22,18 @@ class DataBase {
   static Future<void> _createDB(Database db, int version) async {
     await db.execute('''
       CREATE TABLE categories (
-        id REAL,
+        id INTEGER,
         slug TEXT
       )
     ''');
 
     await db.execute('''
       CREATE TABLE products (
-        id REAL,
+        id INTEGER,
         name TEXT,
-        price TEXT,
+        price REAL,
         image TEXT,
-        categoryId REAL PRIMARY KEY
+        categoryId INTEGER
       )
     ''');
   }
@@ -50,11 +50,11 @@ class DataBase {
   }
 
   static Future<void> insertProduct({
-    required String id,
+    required int id,
     required String name,
     required double price,
     required String image,
-    required String categoryId,
+    required int categoryId,
   }) async {
     final db = await database;
     await db.insert('products', {

@@ -38,6 +38,7 @@ final class ProductsRepository implements IProductsRepository {
         page: page,
         limit: limit,
       );
+      await _dbProducts.saveProducts(dtos);
     } on SocketException {
       dtos = await _dbProducts.fetchProducts(
         categoryId: category.id,

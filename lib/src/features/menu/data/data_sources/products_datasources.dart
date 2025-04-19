@@ -42,11 +42,11 @@ final class NetworkProductsDataSource implements IProductsDataSource {
       for (final dto in productDtos) {
         final product = dto.toModel();
         await DataBase.insertProduct(
-          id: product.id.toString(),
+          id: product.id,
           name: product.name,
-          price: 100,
+          price: product.price,
           image: product.image,
-          categoryId: product.categoryId.toString(),
+          categoryId: product.categoryId,
         );
       }
 
