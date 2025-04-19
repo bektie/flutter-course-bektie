@@ -2,7 +2,7 @@ class ProductDTO {
   final int id;
   final String name;
   final String image;
-  final double price;
+  final dynamic price;
   final int categoryId;
 
   ProductDTO({
@@ -18,7 +18,10 @@ class ProductDTO {
       id: json['id'],
       name: json['name'],
       image: json['imageUrl'],
-      price: double.parse(json['prices'][0]['value']),
+      price:
+          (json['prices'][0]['value'] is String)
+              ? double.parse(json['prices'][0]['value']).toInt()
+              : (json['prices'][0]['value'] as num).toInt(),
       categoryId: json['category']['id'],
     );
   }

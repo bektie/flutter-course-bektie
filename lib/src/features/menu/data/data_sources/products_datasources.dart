@@ -44,7 +44,7 @@ final class NetworkProductsDataSource implements IProductsDataSource {
         await DataBase.insertProduct(
           id: product.id.toString(),
           name: product.name,
-          price: product.price,
+          price: 100,
           image: product.image,
           categoryId: product.categoryId.toString(),
         );

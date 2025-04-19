@@ -26,6 +26,7 @@ final class CategoriesRepository implements ICategoriesRepository {
     try {
       dtos = await _networkCategoriesDataSource.fetchCategories();
     } on SocketException {
+      print('SocketEx');
       dtos = await _localCategories.fetchCategories();
     }
     final categories = dtos.map((e) => e.toModel()).toList();

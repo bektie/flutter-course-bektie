@@ -31,7 +31,7 @@ class DataBase {
       CREATE TABLE products (
         id REAL,
         name TEXT,
-        price REAL,
+        price TEXT,
         image TEXT,
         categoryId REAL PRIMARY KEY
       )
