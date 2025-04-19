@@ -16,9 +16,8 @@ class ProductDTO {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-
       'name': name,
-      'imageUrl': image,
+      'image': image,
       'prices': [
         {'value': price.toString()},
       ],
@@ -30,9 +29,29 @@ class ProductDTO {
     return ProductDTO(
       id: json['id'],
       name: json['name'],
-      image: json['imageUrl'],
+      image: json['imageUrl'] ?? '0',
       price: double.parse(json['prices'][0]['value']),
       categoryId: json['category']['id'],
+    );
+  }
+
+  Map<String, dynamic> toDbJson() {
+    return {
+      'id': id,
+      'name': name,
+      'image': image,
+      'price': price,
+      'categoryId': categoryId,
+    };
+  }
+
+  factory ProductDTO.fromDbJson(Map<String, dynamic> json) {
+    return ProductDTO(
+      id: json['id'],
+      name: json['name'],
+      image: json['imageUrl'] ?? '0',
+      price: json['price'],
+      categoryId: json['categoryId'],
     );
   }
 }

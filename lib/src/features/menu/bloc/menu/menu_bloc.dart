@@ -46,10 +46,13 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
     emit(state.copyWith(items: state.items, status: MenuStatus.progress));
     try {
       final categories = await _categoriesRepository.loadCategories();
+      _currentPaginatedCategory =
+          categories.isNotEmpty ? categories.first : null;
+      _currentPage = 0;
       emit(
         state.copyWith(
           categories: categories,
-          items: List.empty(),
+          items: state.items,
           status: MenuStatus.success,
         ),
       );
@@ -63,14 +66,6 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
         ),
       );
       rethrow;
-    } finally {
-      emit(
-        state.copyWith(
-          categories: state.categories,
-          items: state.items,
-          status: MenuStatus.idle,
-        ),
-      );
     }
   }
 
@@ -103,14 +98,6 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
         ),
       );
       rethrow;
-    } finally {
-      emit(
-        state.copyWith(
-          categories: state.categories,
-          items: previousItems,
-          status: MenuStatus.idle,
-        ),
-      );
     }
   }
 
@@ -129,13 +116,34 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
         page: _currentPage,
         limit: _pageLimit,
       );
+      debugPrint(
+        '[BLoC] ${currentCategory.slug} page $_currentPage → '
+        '${items.length} products',
+      );
+      // If the current category has no products at all,
+      // immediately switch to the next category (or stop if it was the last one)
+      if (items.isEmpty) {
+        if (currentCategory != categories.last) {
+          int nextIndex = categories.indexOf(currentCategory) + 1;
+          currentCategory = categories[nextIndex];
+          _currentPaginatedCategory = currentCategory;
+          _currentPage = 0;
+          add(const PageLoadingStarted());
+        } else {
+          // No products in the very last category – finish pagination
+          _currentPaginatedCategory = null;
+        }
+        return; // stop further processing for this empty result
+      }
       _currentPage += 1;
       if (items.length < _pageLimit) {
         if (currentCategory != categories.last) {
-          int nextPaginatedCategoryIndex =
-              categories.indexOf(currentCategory) + 1;
-          currentCategory = categories[nextPaginatedCategoryIndex];
+          int nextIndex = categories.indexOf(currentCategory) + 1;
+          currentCategory = categories[nextIndex];
           _currentPage = 0;
+        } else {
+          // reached the end of the last category -> stop pagination
+          currentCategory = null;
         }
       }
       _currentPaginatedCategory = currentCategory;
@@ -156,14 +164,6 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
         ),
       );
       rethrow;
-    } finally {
-      emit(
-        state.copyWith(
-          categories: state.categories,
-          items: state.items,
-          status: MenuStatus.idle,
-        ),
-      );
     }
   }
 }
