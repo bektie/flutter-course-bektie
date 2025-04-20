@@ -17,7 +17,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class CoffeeShopApp extends StatelessWidget {
   const CoffeeShopApp({super.key});
   static final dioClient = Dio(
-    BaseOptions(baseUrl: 'https://coffeeshop.academy.effective.band/api/v1'),
+    BaseOptions(
+      baseUrl: 'https://coffeeshop.academy.effective.band/api/v1',
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 15),
+    ),
   );
 
   @override

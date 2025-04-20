@@ -46,7 +46,7 @@ class _ProductCardState extends State<CoffeeCard> {
                             (context, url) =>
                                 const Center(child: SizedBox.shrink()),
                         errorWidget:
-                            (context, url, error) => const Icon(Icons.error),
+                            (context, url, error) => const Icon(Icons.coffee),
                         fit: BoxFit.contain,
                       ),
                     ),
