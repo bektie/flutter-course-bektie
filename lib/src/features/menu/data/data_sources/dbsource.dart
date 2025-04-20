@@ -3,6 +3,8 @@ import 'package:coffeeshop/src/features/menu/data/data_sources/categories_dataso
 import 'package:coffeeshop/src/features/menu/data/data_sources/products_datasources.dart';
 import 'package:coffeeshop/src/features/menu/models/DTO/product_dto.dart';
 import 'package:coffeeshop/src/features/menu/models/DTO/category_dto.dart';
+import 'package:coffeeshop/src/features/menu/utils/category_mapper.dart';
+import 'package:coffeeshop/src/features/menu/utils/product_mapper.dart';
 import 'package:dio/dio.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -19,25 +21,41 @@ abstract interface class IDBProducts implements IProductsDataSource {
 final class DbProductsDataSource implements IDBProducts {
   const DbProductsDataSource({required DataBase db});
 
-  Future<void> saveProducts(List<ProductDTO> products) async {
+  @override
+  Future<void> saveProducts(List<ProductDTO> _ignored) async {
     final db = await DataBase.database;
-    final batch = db.batch();
-    final axios = dio.get(
-      'https://coffeeshop.academy.effective.band/api/v1/products',
+    final result = Sqflite.firstIntValue(
+      await db.rawQuery('SELECT COUNT(*) FROM products'),
     );
-    final response = await axios;
-    final data = response.data;
-    final List<ProductDTO> meow =
-        (data as List).map((e) => ProductDTO.fromJson(e)).toList();
-    for (var product in meow) {
-      batch.insert(
-        'products',
-        product.toDbJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-    }
 
-    await batch.commit(noResult: true);
+    if (result == 0) {
+      const limit = 100;
+      int page = 0;
+      bool hasMore = true;
+
+      while (hasMore) {
+        final response = await dio.get(
+          'https://coffeeshop.academy.effective.band/api/v1/products',
+          queryParameters: {'page': page, 'limit': limit},
+        );
+
+        final data = response.data['data'] as List;
+
+        if (data.isEmpty) {
+          hasMore = false;
+        } else {
+          for (var product in data) {
+            final productDto = ProductDTO.fromJson(product);
+            await db.insert(
+              'products',
+              productDto.toModel().toMap(),
+              conflictAlgorithm: ConflictAlgorithm.replace,
+            );
+          }
+          page++;
+        }
+      }
+    }
   }
 
   @override
@@ -79,23 +97,23 @@ final class DbCategoriesDataSource implements IDBCategories {
 
   Future<void> saveCategories(List<CategoryDto> categories) async {
     final db = await DataBase.database;
-    final batch = db.batch();
-    final axios = dio.get(
-      'https://coffeeshop.academy.effective.band/api/v1/categories',
+    final result = Sqflite.firstIntValue(
+      await db.rawQuery('SELECT COUNT(*) FROM categories'),
     );
-    final response = await axios;
-    final data = response.data;
-    final List<ProductDTO> cats =
-        (data as List).map((e) => ProductDTO.fromJson(e)).toList();
-    for (var category in cats) {
-      batch.insert(
-        'categories',
-        category.toJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
+    if (result == 0) {
+      final response = await dio.get(
+        'https://coffeeshop.academy.effective.band/api/v1/products/categories',
       );
+      final data = response.data['data'];
+      for (var category in data) {
+        final categoryDto = CategoryDto.fromJson(category);
+        db.insert(
+          'categories',
+          categoryDto.toModel().toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
     }
-
-    await batch.commit(noResult: true);
   }
 
   @override
@@ -104,6 +122,6 @@ final class DbCategoriesDataSource implements IDBCategories {
 
     final result = await db.query('categories');
 
-    return result.map((e) => CategoryDto.fromJson(e)).toList();
+    return result.map((e) => CategoryDto.fromDbJson(e)).toList();
   }
 }

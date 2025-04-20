@@ -12,4 +12,14 @@ class ProductModel {
     required this.image,
     required this.categoryId,
   });
+
+  Map<String, Object?> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'price': price,
+      'image': image,
+      'categoryId': categoryId,
+    };
+  }
 }

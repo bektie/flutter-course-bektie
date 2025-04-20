@@ -1,7 +1,5 @@
 import 'dart:io';
-import 'package:coffeeshop/src/common/database.dart';
 import 'package:coffeeshop/src/features/menu/models/DTO/product_dto.dart';
-import 'package:coffeeshop/src/features/menu/utils/product_mapper.dart';
 import 'package:dio/dio.dart';
 
 abstract interface class IProductsDataSource {
@@ -38,17 +36,6 @@ final class NetworkProductsDataSource implements IProductsDataSource {
 
       final productDtos =
           data.map<ProductDTO>((i) => ProductDTO.fromJson(i)).toList();
-
-      for (final dto in productDtos) {
-        final product = dto.toModel();
-        await DataBase.insertProduct(
-          id: product.id,
-          name: product.name,
-          price: product.price,
-          image: product.image,
-          categoryId: product.categoryId,
-        );
-      }
 
       return productDtos;
     } on DioException catch (_) {

@@ -116,12 +116,7 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
         page: _currentPage,
         limit: _pageLimit,
       );
-      debugPrint(
-        '[BLoC] ${currentCategory.slug} page $_currentPage → '
-        '${items.length} products',
-      );
-      // If the current category has no products at all,
-      // immediately switch to the next category (or stop if it was the last one)
+
       if (items.isEmpty) {
         if (currentCategory != categories.last) {
           int nextIndex = categories.indexOf(currentCategory) + 1;
@@ -130,10 +125,9 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
           _currentPage = 0;
           add(const PageLoadingStarted());
         } else {
-          // No products in the very last category – finish pagination
           _currentPaginatedCategory = null;
         }
-        return; // stop further processing for this empty result
+        return;
       }
       _currentPage += 1;
       if (items.length < _pageLimit) {
@@ -142,7 +136,6 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
           currentCategory = categories[nextIndex];
           _currentPage = 0;
         } else {
-          // reached the end of the last category -> stop pagination
           currentCategory = null;
         }
       }

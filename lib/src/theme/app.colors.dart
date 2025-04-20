@@ -5,4 +5,3 @@ class AppColors {
   static const black = Colors.black;
   static const lightblue = Color(0xFFB3E5FC);
 }
-// ;
