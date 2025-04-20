@@ -41,7 +41,7 @@ class DataBase {
       CREATE TABLE locations (
         address TEXT,
         lat REAL,
-        lng REAL,
+        lng REAL
       )
     ''');
   }

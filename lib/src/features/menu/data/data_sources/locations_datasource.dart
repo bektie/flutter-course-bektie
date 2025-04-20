@@ -17,7 +17,10 @@ class NetworkLocationsDataSource implements ILocationsDataSource {
       final data = response.data['data'];
       if (data is! List) throw const FormatException();
       final locations =
-          (data).map<LocationsDto>((i) => LocationsDto.fromJson(i)).toList();
+          data
+              .map((i) => LocationsDto.fromJson(i))
+              .whereType<LocationsDto>()
+              .toList();
       return locations;
     } catch (e) {
       rethrow;

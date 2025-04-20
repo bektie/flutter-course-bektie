@@ -9,6 +9,10 @@ class LocationsModel {
     return {'address': address, 'lat': lat, 'lng': lng};
   }
 
+  Map<String, dynamic> toMap() {
+    return {'address': address, 'lat': lat, 'lng': lng};
+  }
+
   factory LocationsModel.fromJson(Map<String, dynamic> json) {
     return LocationsModel(
       address: json['address'] as String,

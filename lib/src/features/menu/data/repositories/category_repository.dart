@@ -30,7 +30,7 @@ final class CategoriesRepository implements ICategoriesRepository {
       dtos = await _localCategories.fetchCategories();
     }
     final categories = dtos.map((e) => e.toModel()).toList();
-    categories.removeLast();
+
     return categories;
   }
 }

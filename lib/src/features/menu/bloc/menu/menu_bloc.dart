@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:coffeeshop/src/features/menu/data/repositories/category_repository.dart';
+import 'package:coffeeshop/src/features/menu/data/repositories/location_repository.dart';
 import 'package:coffeeshop/src/features/menu/data/repositories/product_repository.dart';
 import 'package:coffeeshop/src/features/menu/models/models/category_model.dart';
 import 'package:coffeeshop/src/features/menu/models/models/product_model.dart';
@@ -21,8 +22,11 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
 }
 
 class MenuBloc extends Bloc<MenuEvent, MenuState> {
-  MenuBloc(this._productsRepository, this._categoriesRepository)
-    : super(
+  MenuBloc(
+    this._productsRepository,
+    this._categoriesRepository,
+    this._locationRepository,
+  ) : super(
         const MenuState(status: MenuStatus.idle, items: [], categories: []),
       ) {
     on<CategoryLoadingStarted>(_loadCategories);
@@ -31,16 +35,23 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
       transformer: throttleDroppable(throttleDuration),
     );
     on<OneCategoryLoadingStarted>(_loadProductsFromOneCategory);
+
+    Future.microtask(() => _loadLocations(null, emit));
   }
 
   final IProductsRepository _productsRepository;
   final ICategoriesRepository _categoriesRepository;
+  final ILocationsRepository _locationRepository;
 
   CategoryModel? _currentPaginatedCategory;
 
   int _currentPage = 0;
 
   final int _pageLimit = 25;
+
+  Future<void> _loadLocations(event, emit) async {
+    final locations = await _locationRepository.loadLocations();
+  }
 
   Future<void> _loadCategories(event, emit) async {
     emit(state.copyWith(items: state.items, status: MenuStatus.progress));

@@ -5,5 +5,17 @@ class LocationsDto {
 
   LocationsDto({required this.address, required this.lat, required this.lng});
 
-  static fromJson(location) {}
+  static LocationsDto? fromJson(Map<String, dynamic> location) {
+    final address = location['address'];
+    final lat = location['lat'];
+    final lng = location['lng'];
+
+    if (address == null || lat == null || lng == null) return null;
+
+    return LocationsDto(
+      address: address,
+      lat: lat.toDouble(),
+      lng: lng.toDouble(),
+    );
+  }
 }

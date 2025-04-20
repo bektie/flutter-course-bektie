@@ -7,10 +7,16 @@ import 'package:coffeeshop/src/features/menu/models/DTO/product_dto.dart';
 import 'package:coffeeshop/src/features/menu/models/DTO/category_dto.dart';
 import 'package:coffeeshop/src/features/menu/utils/category_mapper.dart';
 import 'package:coffeeshop/src/features/menu/utils/product_mapper.dart';
+import 'package:coffeeshop/src/features/menu/utils/locations_mapper.dart';
 import 'package:dio/dio.dart';
 import 'package:sqflite/sqflite.dart';
 
-final dio = Dio();
+final dio = Dio(
+  (BaseOptions(
+    connectTimeout: const Duration(seconds: 10),
+    receiveTimeout: const Duration(seconds: 15),
+  )),
+);
 
 abstract interface class IDBCategories implements ICategoriesDataSource {
   Future<void> saveCategories(List<CategoryDto> categories);
@@ -22,6 +28,7 @@ abstract interface class IDBProducts implements IProductsDataSource {
 
 abstract interface class IDBLocations implements ILocationsDataSource {
   Future<void> saveLocations(List<LocationsDto> locations);
+  Future<List<dynamic>> getLocations();
 }
 
 final class DbProductsDataSource implements IDBProducts {
@@ -114,7 +121,7 @@ final class DbCategoriesDataSource implements IDBCategories {
       final data = response.data['data'];
       for (var category in data) {
         final categoryDto = CategoryDto.fromJson(category);
-        db.insert(
+        await db.insert(
           'categories',
           categoryDto.toModel().toMap(),
           conflictAlgorithm: ConflictAlgorithm.replace,
@@ -135,8 +142,9 @@ final class DbCategoriesDataSource implements IDBCategories {
 
 final class DbLocationsDataSource implements IDBLocations {
   const DbLocationsDataSource({required DataBase db});
+
   @override
-  Future<List> getLocations() async {
+  Future<List<dynamic>> getLocations() async {
     final db = await DataBase.database;
 
     final result = await db.query('locations');
@@ -157,9 +165,9 @@ final class DbLocationsDataSource implements IDBLocations {
       final data = response.data['data'];
       for (var location in data) {
         final locationDto = LocationsDto.fromJson(location);
-        db.insert(
+        await db.insert(
           'locations',
-          locationDto.toModel().toMap(),
+          locationDto!.toModel().toMap(),
           conflictAlgorithm: ConflictAlgorithm.replace,
         );
       }
