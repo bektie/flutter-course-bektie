@@ -1,18 +1,26 @@
-import 'dart:io';
-
+import 'package:coffeeshop/src/features/menu/models/DTO/locations_dto.dart';
 import 'package:dio/dio.dart';
 
 final dio = Dio();
 final String locationsUrl =
     'http://coffeeshop.academy.effective.band/api/v1/locations';
 
-class LocationsDataSource {
+abstract interface class ILocationsDataSource {
+  getLocations() {}
+}
+
+class NetworkLocationsDataSource implements ILocationsDataSource {
+  @override
   Future<List<dynamic>> getLocations() async {
     try {
       final response = await dio.get(locationsUrl);
-      return response.data;
-    } on SocketException {
-      return [];
+      final data = response.data['data'];
+      if (data is! List) throw const FormatException();
+      final locations =
+          (data).map<LocationsDto>((i) => LocationsDto.fromJson(i)).toList();
+      return locations;
+    } catch (e) {
+      rethrow;
     }
   }
 }

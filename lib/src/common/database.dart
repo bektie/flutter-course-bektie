@@ -36,34 +36,14 @@ class DataBase {
         categoryId INTEGER
       )
     ''');
-  }
 
-  static Future<void> insertCategory({
-    required String id,
-    required String slug,
-  }) async {
-    final db = await database;
-    await db.insert('categories', {
-      'id': id,
-      'slug': slug,
-    }, conflictAlgorithm: ConflictAlgorithm.replace);
-  }
-
-  static Future<void> insertProduct({
-    required int id,
-    required String name,
-    required double price,
-    required String image,
-    required int categoryId,
-  }) async {
-    final db = await database;
-    await db.insert('products', {
-      'id': id,
-      'name': name,
-      'price': price,
-      'image': image,
-      'categoryId': categoryId,
-    }, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.execute('''
+      CREATE TABLE locations (
+        address TEXT,
+        lat REAL,
+        lng REAL,
+      )
+    ''');
   }
 
   query(

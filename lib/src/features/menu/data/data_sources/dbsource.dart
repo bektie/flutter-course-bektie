@@ -1,6 +1,8 @@
 import 'package:coffeeshop/src/common/database.dart';
 import 'package:coffeeshop/src/features/menu/data/data_sources/categories_datasource.dart';
+import 'package:coffeeshop/src/features/menu/data/data_sources/locations_datasource.dart';
 import 'package:coffeeshop/src/features/menu/data/data_sources/products_datasources.dart';
+import 'package:coffeeshop/src/features/menu/models/DTO/locations_dto.dart';
 import 'package:coffeeshop/src/features/menu/models/DTO/product_dto.dart';
 import 'package:coffeeshop/src/features/menu/models/DTO/category_dto.dart';
 import 'package:coffeeshop/src/features/menu/utils/category_mapper.dart';
@@ -16,6 +18,10 @@ abstract interface class IDBCategories implements ICategoriesDataSource {
 
 abstract interface class IDBProducts implements IProductsDataSource {
   Future<void> saveProducts(List<ProductDTO> products);
+}
+
+abstract interface class IDBLocations implements ILocationsDataSource {
+  Future<void> saveLocations(List<LocationsDto> locations);
 }
 
 final class DbProductsDataSource implements IDBProducts {
@@ -95,6 +101,7 @@ final class DbProductsDataSource implements IDBProducts {
 final class DbCategoriesDataSource implements IDBCategories {
   const DbCategoriesDataSource({required DataBase db});
 
+  @override
   Future<void> saveCategories(List<CategoryDto> categories) async {
     final db = await DataBase.database;
     final result = Sqflite.firstIntValue(
@@ -123,5 +130,39 @@ final class DbCategoriesDataSource implements IDBCategories {
     final result = await db.query('categories');
 
     return result.map((e) => CategoryDto.fromDbJson(e)).toList();
+  }
+}
+
+final class DbLocationsDataSource implements IDBLocations {
+  const DbLocationsDataSource({required DataBase db});
+  @override
+  Future<List> getLocations() async {
+    final db = await DataBase.database;
+
+    final result = await db.query('locations');
+
+    return result.map((e) => LocationsDto.fromJson(e)).toList();
+  }
+
+  @override
+  Future<void> saveLocations(List<LocationsDto> locations) async {
+    final db = await DataBase.database;
+    final result = Sqflite.firstIntValue(
+      await db.rawQuery('SELECT COUNT(*) FROM locations'),
+    );
+    if (result == 0) {
+      final response = await dio.get(
+        'https://coffeeshop.academy.effective.band/api/v1/locations',
+      );
+      final data = response.data['data'];
+      for (var location in data) {
+        final locationDto = LocationsDto.fromJson(location);
+        db.insert(
+          'locations',
+          locationDto.toModel().toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace,
+        );
+      }
+    }
   }
 }
