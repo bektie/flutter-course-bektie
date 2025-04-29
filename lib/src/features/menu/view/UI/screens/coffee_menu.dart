@@ -85,7 +85,7 @@ class _MenuScreenState extends State<MenuScreen> {
           return SafeArea(
             child: Scaffold(
               appBar: PreferredSize(
-                preferredSize: const Size.fromHeight((50)),
+                preferredSize: const Size.fromHeight((102)),
                 child: Padding(
                   padding: const EdgeInsets.only(
                     left: 16,
@@ -95,6 +95,14 @@ class _MenuScreenState extends State<MenuScreen> {
                   child: Column(
                     children: [
                       const Spacer(),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: GestureDetector(
+                          child: Row(
+                            children: [Icon(Icons.add), Text('Ленина 15')],
+                          ),
+                        ),
+                      ),
                       SizedBox(
                         height: 40,
                         child: ScrollablePositionedList.builder(

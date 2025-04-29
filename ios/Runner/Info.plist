@@ -28,8 +28,13 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+<string>Мы используем ваше местоположение для показа на карте</string>
+<key>NSLocationAlwaysUsageDescription</key>
+<string>Мы используем ваше местоположение для показа на карте</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
+	
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
@@ -41,6 +46,12 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>locations</string>
+		<string>NSLocationWhenInUseUsageDescription</string>
+		<string>NSLocationAlwaysUsageDescription</string>
+		<string>NSLocationAlwaysAndWhenInUseUsageDescription</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

@@ -36,6 +36,7 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
     );
     on<OneCategoryLoadingStarted>(_loadProductsFromOneCategory);
 
+    // ignore: invalid_use_of_visible_for_testing_member
     Future.microtask(() => _loadLocations(null, emit));
   }
 
@@ -50,6 +51,7 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
   final int _pageLimit = 25;
 
   Future<void> _loadLocations(event, emit) async {
+    // ignore: unused_local_variable
     final locations = await _locationRepository.loadLocations();
   }
 
