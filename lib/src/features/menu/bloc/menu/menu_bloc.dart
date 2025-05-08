@@ -10,6 +10,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:stream_transform/stream_transform.dart';
+import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 part 'menu_event.dart';
 part 'menu_state.dart';
