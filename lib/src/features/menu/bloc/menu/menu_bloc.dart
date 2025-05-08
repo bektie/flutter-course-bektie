@@ -4,6 +4,7 @@ import 'package:coffeeshop/src/features/menu/data/repositories/category_reposito
 import 'package:coffeeshop/src/features/menu/data/repositories/location_repository.dart';
 import 'package:coffeeshop/src/features/menu/data/repositories/product_repository.dart';
 import 'package:coffeeshop/src/features/menu/models/models/category_model.dart';
+import 'package:coffeeshop/src/features/menu/models/models/locations_model.dart';
 import 'package:coffeeshop/src/features/menu/models/models/product_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,12 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
     this._categoriesRepository,
     this._locationRepository,
   ) : super(
-        const MenuState(status: MenuStatus.idle, items: [], categories: []),
+        const MenuState(
+          status: MenuStatus.idle,
+          items: [],
+          categories: [],
+          locations: [],
+        ),
       ) {
     on<CategoryLoadingStarted>(_loadCategories);
     on<PageLoadingStarted>(
@@ -35,9 +41,10 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
       transformer: throttleDroppable(throttleDuration),
     );
     on<OneCategoryLoadingStarted>(_loadProductsFromOneCategory);
+    on<LocationsLoadingStarted>(_loadLocations);
 
-    // ignore: invalid_use_of_visible_for_testing_member
-    Future.microtask(() => _loadLocations(null, emit));
+    add(const CategoryLoadingStarted());
+    add(const LocationsLoadingStarted());
   }
 
   final IProductsRepository _productsRepository;
@@ -49,11 +56,6 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
   int _currentPage = 0;
 
   final int _pageLimit = 25;
-
-  Future<void> _loadLocations(event, emit) async {
-    // ignore: unused_local_variable
-    final locations = await _locationRepository.loadLocations();
-  }
 
   Future<void> _loadCategories(event, emit) async {
     emit(state.copyWith(items: state.items, status: MenuStatus.progress));
@@ -171,5 +173,11 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
       );
       rethrow;
     }
+  }
+
+  Future<void> _loadLocations(event, emit) async {
+    final List<LocationsModel> locations =
+        await _locationRepository.loadLocations();
+    emit(state.copyWith(locations: locations));
   }
 }

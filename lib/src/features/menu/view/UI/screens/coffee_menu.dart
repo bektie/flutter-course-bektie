@@ -1,5 +1,6 @@
 import 'package:coffeeshop/src/features/menu/bloc/cart/cart_bloc.dart';
 import 'package:coffeeshop/src/features/menu/bloc/menu/menu_bloc.dart';
+import 'package:coffeeshop/src/features/menu/view/UI/screens/map_screen.dart';
 import 'package:coffeeshop/src/features/menu/view/UI/widgets/builders.dart';
 import 'package:coffeeshop/src/features/menu/view/UI/widgets/order_bottomsheet.dart';
 import 'package:coffeeshop/src/theme/app.colors.dart';
@@ -77,16 +78,20 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MenuBloc, MenuState>(
-      buildWhen: (context, state) {
-        return state.status == MenuStatus.idle;
-      },
       builder: (context, state) {
-        if (state.status != MenuStatus.error) {
-          return SafeArea(
-            child: Scaffold(
-              appBar: PreferredSize(
-                preferredSize: const Size.fromHeight((102)),
-                child: Padding(
+        if (state.status == MenuStatus.error) {
+          return const Center(child: Text('Ошибка загрузки'));
+        }
+
+        if (state.items.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return SafeArea(
+          child: Scaffold(
+            body: Column(
+              children: [
+                Padding(
                   padding: const EdgeInsets.only(
                     left: 16,
                     right: 20,
@@ -94,12 +99,27 @@ class _MenuScreenState extends State<MenuScreen> {
                   ),
                   child: Column(
                     children: [
-                      const Spacer(),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 10),
-                        child: GestureDetector(
+                      const SizedBox(height: 16),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MapScreen(),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.only(bottom: 10),
+                          color: Colors.transparent,
                           child: Row(
-                            children: [Icon(Icons.add), Text('Ленина 15')],
+                            children: [
+                              Icon(Icons.location_on),
+                              Text(
+                                'Ленина 15',
+                              ), //здесь нужно задать адрес с карты + сохранение после перезапуска, то есть глобально хранить переменные
+                            ],
                           ),
                         ),
                       ),
@@ -150,58 +170,59 @@ class _MenuScreenState extends State<MenuScreen> {
                     ],
                   ),
                 ),
-              ),
-              body: Padding(
-                padding: const EdgeInsets.only(left: 16, right: 20),
-                child: ScrollablePositionedList.builder(
-                  itemScrollController: _menuController,
-                  itemPositionsListener: itemListener,
-                  itemBuilder: (context, index) {
-                    final category = state.categories[index];
-                    final products =
-                        state.items
-                            .where((e) => e.categoryId == category.id)
-                            .toList();
-                    return BuilderGrid(category: category, products: products);
-                  },
-                  itemCount: state.categories.length,
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 16, right: 20),
+                    child: ScrollablePositionedList.builder(
+                      itemScrollController: _menuController,
+                      itemPositionsListener: itemListener,
+                      itemBuilder: (context, index) {
+                        final category = state.categories[index];
+                        final products =
+                            state.items
+                                .where((e) => e.categoryId == category.id)
+                                .toList();
+                        return BuilderGrid(
+                          category: category,
+                          products: products,
+                        );
+                      },
+                      itemCount: state.categories.length,
+                    ),
+                  ),
                 ),
-              ),
-              floatingActionButton: BlocBuilder<CartBloc, CartState>(
-                builder: (context, state) {
-                  if (state.cartItems.isNotEmpty) {
-                    return FloatingActionButton.extended(
-                      backgroundColor: AppColors.lightblue,
-                      onPressed:
-                          () => {
-                            showModalBottomSheet(
-                              isScrollControlled: true,
-                              backgroundColor: AppColors.white,
-                              context: context,
-                              builder:
-                                  (_) => BlocProvider.value(
-                                    value: BlocProvider.of<CartBloc>(context),
-                                    child: const OrderBottomSheet(),
-                                  ),
-                            ),
-                          },
-                      icon: const Icon(
-                        Icons.local_mall,
-                        color: AppColors.white,
-                      ),
-                      label: Text(
-                        '${state.cost.floor()}',
-                        style: Theme.of(context).textTheme.labelMedium,
-                      ),
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
-              ),
+              ],
             ),
-          );
-        }
-        return const Center(child: CircularProgressIndicator());
+            floatingActionButton: BlocBuilder<CartBloc, CartState>(
+              builder: (context, state) {
+                if (state.cartItems.isNotEmpty) {
+                  return FloatingActionButton.extended(
+                    backgroundColor: AppColors.lightblue,
+                    onPressed:
+                        () => {
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: AppColors.white,
+                            context: context,
+                            builder:
+                                (_) => BlocProvider.value(
+                                  value: BlocProvider.of<CartBloc>(context),
+                                  child: const OrderBottomSheet(),
+                                ),
+                          ),
+                        },
+                    icon: const Icon(Icons.local_mall, color: AppColors.white),
+                    label: Text(
+                      '${state.cost.floor()}',
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        );
       },
     );
   }

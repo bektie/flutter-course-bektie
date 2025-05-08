@@ -74,11 +74,14 @@ class CoffeeShopApp extends StatelessWidget {
             ),
             BlocProvider(
               create:
-                  (context) => MenuBloc(
-                    context.read<IProductsRepository>(),
-                    context.read<ICategoriesRepository>(),
-                    context.read<ILocationsRepository>(),
-                  )..add(const CategoryLoadingStarted()),
+                  (context) =>
+                      MenuBloc(
+                          context.read<IProductsRepository>(),
+                          context.read<ICategoriesRepository>(),
+                          context.read<ILocationsRepository>(),
+                        )
+                        ..add(const LocationsLoadingStarted())
+                        ..add(const CategoryLoadingStarted()),
             ),
           ],
           child: MaterialApp(home: MenuScreen()),
