@@ -17,7 +17,10 @@ final class NetworkCategoriesDataSource implements ICategoriesDataSource {
       final response = await _dio.get('/products/categories');
       final data = response.data['data'];
       if (data is! List) throw const FormatException();
-      return (data).map<CategoryDto>((i) => CategoryDto.fromJson(i)).toList();
+      final categories =
+          (data).map<CategoryDto>((i) => CategoryDto.fromJson(i)).toList();
+
+      return categories;
     } on DioException catch (_) {
       throw const SocketException('/products/categories');
     }

@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:coffeeshop/src/features/menu/data/data_sources/dbsource.dart';
 import 'package:coffeeshop/src/features/menu/data/data_sources/products_datasources.dart';
 import 'package:coffeeshop/src/features/menu/models/DTO/product_dto.dart';
 import 'package:coffeeshop/src/features/menu/models/models/category_model.dart';
@@ -14,9 +17,13 @@ abstract interface class IProductsRepository {
 
 final class ProductsRepository implements IProductsRepository {
   final IProductsDataSource _networkProductsDataSource;
+  final IDBProducts _dbProducts;
 
-  ProductsRepository({required IProductsDataSource networkProductsDataSource})
-    : _networkProductsDataSource = networkProductsDataSource;
+  ProductsRepository({
+    required IDBProducts dbProducts,
+    required IProductsDataSource networkProductsDataSource,
+  }) : _networkProductsDataSource = networkProductsDataSource,
+       _dbProducts = dbProducts;
 
   @override
   Future<List<ProductModel>> loadProducts({
@@ -25,11 +32,21 @@ final class ProductsRepository implements IProductsRepository {
     int limit = 25,
   }) async {
     List<ProductDTO> dtos = <ProductDTO>[];
-    dtos = await _networkProductsDataSource.fetchProducts(
-      categoryId: category.id,
-      page: page,
-      limit: limit,
-    );
+    try {
+      dtos = await _networkProductsDataSource.fetchProducts(
+        categoryId: category.id,
+        page: page,
+        limit: limit,
+      );
+      await _dbProducts.saveProducts(dtos);
+    } on SocketException {
+      dtos = await _dbProducts.fetchProducts(
+        categoryId: category.id,
+        page: page,
+        limit: limit,
+      );
+    }
+
     return dtos.map((e) => e.toModel()).toList();
   }
 }

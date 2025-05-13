@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:coffeeshop/src/features/menu/data/repositories/category_repository.dart';
+import 'package:coffeeshop/src/features/menu/data/repositories/location_repository.dart';
 import 'package:coffeeshop/src/features/menu/data/repositories/product_repository.dart';
 import 'package:coffeeshop/src/features/menu/models/models/category_model.dart';
 import 'package:coffeeshop/src/features/menu/models/models/product_model.dart';
@@ -21,8 +22,11 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
 }
 
 class MenuBloc extends Bloc<MenuEvent, MenuState> {
-  MenuBloc(this._productsRepository, this._categoriesRepository)
-    : super(
+  MenuBloc(
+    this._productsRepository,
+    this._categoriesRepository,
+    this._locationRepository,
+  ) : super(
         const MenuState(status: MenuStatus.idle, items: [], categories: []),
       ) {
     on<CategoryLoadingStarted>(_loadCategories);
@@ -31,10 +35,13 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
       transformer: throttleDroppable(throttleDuration),
     );
     on<OneCategoryLoadingStarted>(_loadProductsFromOneCategory);
+
+    Future.microtask(() => _loadLocations(null, emit));
   }
 
   final IProductsRepository _productsRepository;
   final ICategoriesRepository _categoriesRepository;
+  final ILocationsRepository _locationRepository;
 
   CategoryModel? _currentPaginatedCategory;
 
@@ -42,14 +49,21 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
 
   final int _pageLimit = 25;
 
+  Future<void> _loadLocations(event, emit) async {
+    final locations = await _locationRepository.loadLocations();
+  }
+
   Future<void> _loadCategories(event, emit) async {
     emit(state.copyWith(items: state.items, status: MenuStatus.progress));
     try {
       final categories = await _categoriesRepository.loadCategories();
+      _currentPaginatedCategory =
+          categories.isNotEmpty ? categories.first : null;
+      _currentPage = 0;
       emit(
         state.copyWith(
           categories: categories,
-          items: List.empty(),
+          items: state.items,
           status: MenuStatus.success,
         ),
       );
@@ -63,14 +77,6 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
         ),
       );
       rethrow;
-    } finally {
-      emit(
-        state.copyWith(
-          categories: state.categories,
-          items: state.items,
-          status: MenuStatus.idle,
-        ),
-      );
     }
   }
 
@@ -103,14 +109,6 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
         ),
       );
       rethrow;
-    } finally {
-      emit(
-        state.copyWith(
-          categories: state.categories,
-          items: previousItems,
-          status: MenuStatus.idle,
-        ),
-      );
     }
   }
 
@@ -129,13 +127,27 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
         page: _currentPage,
         limit: _pageLimit,
       );
+
+      if (items.isEmpty) {
+        if (currentCategory != categories.last) {
+          int nextIndex = categories.indexOf(currentCategory) + 1;
+          currentCategory = categories[nextIndex];
+          _currentPaginatedCategory = currentCategory;
+          _currentPage = 0;
+          add(const PageLoadingStarted());
+        } else {
+          _currentPaginatedCategory = null;
+        }
+        return;
+      }
       _currentPage += 1;
       if (items.length < _pageLimit) {
         if (currentCategory != categories.last) {
-          int nextPaginatedCategoryIndex =
-              categories.indexOf(currentCategory) + 1;
-          currentCategory = categories[nextPaginatedCategoryIndex];
+          int nextIndex = categories.indexOf(currentCategory) + 1;
+          currentCategory = categories[nextIndex];
           _currentPage = 0;
+        } else {
+          currentCategory = null;
         }
       }
       _currentPaginatedCategory = currentCategory;
@@ -156,14 +168,6 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
         ),
       );
       rethrow;
-    } finally {
-      emit(
-        state.copyWith(
-          categories: state.categories,
-          items: state.items,
-          status: MenuStatus.idle,
-        ),
-      );
     }
   }
 }
