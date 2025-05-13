@@ -7,12 +7,14 @@ final class MenuState extends Equatable {
   final List<CategoryModel> categories;
   final List<ProductModel> items;
   final List<LocationsModel> locations;
+  final LocationsModel? selectedLocation;
 
   const MenuState({
     required this.status,
     required this.categories,
     required this.items,
     required this.locations,
+    this.selectedLocation,
   });
 
   MenuState copyWith({
@@ -20,12 +22,14 @@ final class MenuState extends Equatable {
     List<ProductModel>? items,
     List<LocationsModel>? locations,
     MenuStatus? status,
+    LocationsModel? selectedLocation,
   }) {
     return MenuState(
       status: status ?? this.status,
       categories: categories ?? this.categories,
       items: items ?? this.items,
       locations: locations ?? this.locations,
+      selectedLocation: selectedLocation ?? this.selectedLocation,
     );
   }
 
@@ -35,5 +39,11 @@ final class MenuState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, categories, items, locations];
+  List<Object?> get props => [
+    status,
+    categories,
+    items,
+    locations,
+    selectedLocation,
+  ];
 }

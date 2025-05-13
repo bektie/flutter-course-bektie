@@ -22,7 +22,15 @@ class _LocationsScreenState extends State<LocationsScreen> {
           return ListView.builder(
             itemCount: locations.length,
             itemBuilder: (context, index) {
-              return ListTile(title: Text(locations[index].address));
+              return ListTile(
+                title: Text(locations[index].address),
+                onTap: () {
+                  context.read<MenuBloc>().add(
+                    LocationSelected(locations[index]),
+                  );
+                  Navigator.pushNamed(context, '/menu');
+                },
+              );
             },
           );
         },

@@ -5,6 +5,17 @@ sealed class MenuEvent extends Equatable {
   const MenuEvent();
 }
 
+class LocationSelected extends MenuEvent {
+  final LocationsModel location;
+
+  const LocationSelected(this.location);
+
+  @override
+  String toString() => 'LocationSelected';
+  @override
+  List<Object> get props => [location];
+}
+
 class CategoryLoadingStarted extends MenuEvent {
   const CategoryLoadingStarted();
 

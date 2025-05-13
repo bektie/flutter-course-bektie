@@ -117,8 +117,11 @@ class _MenuScreenState extends State<MenuScreen> {
                             children: [
                               Icon(Icons.location_on),
                               Text(
-                                'Ленина 15',
-                              ), //здесь нужно задать адрес с карты + сохранение после перезапуска, то есть глобально хранить переменные
+                                state.selectedLocation?.address ??
+                                    (state.locations.isNotEmpty
+                                        ? state.locations.first.address
+                                        : 'Ленина 15'),
+                              ),
                             ],
                           ),
                         ),

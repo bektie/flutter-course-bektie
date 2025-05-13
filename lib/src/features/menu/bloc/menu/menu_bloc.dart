@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:coffeeshop/src/features/menu/data/repositories/category_repository.dart';
 import 'package:coffeeshop/src/features/menu/data/repositories/location_repository.dart';
@@ -10,7 +11,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:stream_transform/stream_transform.dart';
-import 'package:yandex_mapkit/yandex_mapkit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'menu_event.dart';
 part 'menu_state.dart';
@@ -43,6 +44,10 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
     );
     on<OneCategoryLoadingStarted>(_loadProductsFromOneCategory);
     on<LocationsLoadingStarted>(_loadLocations);
+    on<LocationSelected>((event, emit) async {
+      await saveSelectedLocation(event.location);
+      emit(state.copyWith(selectedLocation: event.location));
+    });
 
     add(const CategoryLoadingStarted());
     add(const LocationsLoadingStarted());
@@ -179,6 +184,32 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
   Future<void> _loadLocations(event, emit) async {
     final List<LocationsModel> locations =
         await _locationRepository.loadLocations();
-    emit(state.copyWith(locations: locations));
+
+    final savedLocation = await loadSelectedLocation();
+
+    final selected = locations.firstWhere(
+      (l) => l.address == savedLocation?.address,
+      orElse:
+          () =>
+              locations.isNotEmpty
+                  ? locations.first
+                  : LocationsModel(address: '', lat: 0, lng: 0),
+    );
+
+    emit(state.copyWith(locations: locations, selectedLocation: selected));
+  }
+
+  Future<void> saveSelectedLocation(LocationsModel location) async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString = jsonEncode(location.toJson());
+    await prefs.setString('selected_location', jsonString);
+  }
+
+  Future<LocationsModel?> loadSelectedLocation() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString = prefs.getString('selected_location');
+    if (jsonString == null) return null;
+    final Map<String, dynamic> json = jsonDecode(jsonString);
+    return LocationsModel.fromJson(json);
   }
 }

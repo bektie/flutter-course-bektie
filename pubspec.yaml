@@ -12,6 +12,7 @@ dependencies:
   http: ^0.13.6
   location: ^5.0.0
   flutter_bloc: ^9.1.0
+  shared_preferences: ^2.5.3
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
