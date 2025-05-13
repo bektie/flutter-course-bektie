@@ -13,6 +13,8 @@ dependencies:
   location: ^5.0.0
   flutter_bloc: ^9.1.0
   shared_preferences: ^2.5.3
+  geolocator: ^9.0.2
+  geocoding: ^2.1.0
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8

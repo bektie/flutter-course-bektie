@@ -30,6 +30,14 @@
   <string>Main</string>
   <key>NSLocationWhenInUseUsageDescription</key>
   <string>Мы используем ваше местоположение для показа на карте</string>
+  <key>NSLocationWhenInUseUsageDescription</key>
+<string>Мы используем ваше местоположение для отображения на карте</string>
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>Нам нужно ваше местоположение даже в фоновом режиме</string>
+<key>NSLocationAlwaysUsageDescription</key>
+<string>Нам нужно ваше местоположение всегда</string>
+<key>NSLocalNetworkUsageDescription</key>
+<string>Нужно для работы карты и отладки</string>
   <key>NSLocationAlwaysUsageDescription</key>
   <string>Мы используем ваше местоположение для показа на карте</string>
   <key>UISupportedInterfaceOrientations</key>
