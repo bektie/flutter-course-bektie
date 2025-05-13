@@ -7,6 +7,8 @@ import 'package:yandex_mapkit/yandex_mapkit.dart';
 import 'package:geolocator/geolocator.dart';
 
 class MapScreen extends StatefulWidget {
+  const MapScreen({super.key});
+
   @override
   State<MapScreen> createState() => _MapScreenState();
 }
