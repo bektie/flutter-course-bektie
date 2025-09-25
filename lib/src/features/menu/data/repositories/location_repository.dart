@@ -3,6 +3,7 @@ import 'package:coffeeshop/src/features/menu/data/data_sources/dbsource.dart';
 import 'package:coffeeshop/src/features/menu/data/data_sources/locations_datasource.dart';
 
 import 'package:coffeeshop/src/features/menu/models/DTO/locations_dto.dart';
+import 'package:coffeeshop/src/features/menu/models/models/locations_model.dart';
 import 'package:coffeeshop/src/features/menu/utils/locations_mapper.dart';
 
 abstract interface class ILocationsRepository {
@@ -19,7 +20,7 @@ class LocationRepository implements ILocationsRepository {
        _localLocations = localLocations;
 
   @override
-  Future<List<dynamic>> loadLocations() async {
+  Future<List<LocationsModel>> loadLocations() async {
     List<LocationsDto> dtos = <LocationsDto>[];
     try {
       dtos = await _networkLocationsDataSource.getLocations();
@@ -27,7 +28,8 @@ class LocationRepository implements ILocationsRepository {
     } on SocketException {
       dtos = (await _localLocations.getLocations()).cast<LocationsDto>();
     }
-    final locations = dtos.map((e) => e.toModel()).toList();
+    final locations =
+        dtos.map((e) => e.toModel()).toList().cast<LocationsModel>();
     return locations;
   }
 }

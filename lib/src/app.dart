@@ -11,6 +11,8 @@ import 'package:coffeeshop/src/features/menu/data/repositories/order_repository.
 import 'package:coffeeshop/src/features/menu/data/repositories/product_repository.dart';
 import 'package:coffeeshop/src/features/menu/view/UI/screens/coffee_menu.dart';
 import 'package:coffeeshop/src/features/menu/data/data_sources/locations_datasource.dart';
+import 'package:coffeeshop/src/features/menu/view/UI/screens/locations_screen.dart';
+import 'package:coffeeshop/src/features/menu/view/UI/screens/map_screen.dart';
 import 'package:coffeeshop/src/theme/theme.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -28,60 +30,65 @@ class CoffeeShopApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: theme,
-      home: MultiRepositoryProvider(
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<ICategoriesRepository>(
+          create:
+              (context) => CategoriesRepository(
+                networkCategoriesDataSource: NetworkCategoriesDataSource(
+                  dio: dioClient,
+                ),
+                localCategories: DbCategoriesDataSource(db: DataBase()),
+              ),
+        ),
+        RepositoryProvider<IProductsRepository>(
+          create:
+              (context) => ProductsRepository(
+                networkProductsDataSource: NetworkProductsDataSource(
+                  dio: dioClient,
+                ),
+                dbProducts: DbProductsDataSource(db: DataBase()),
+              ),
+        ),
+        RepositoryProvider<ILocationsRepository>(
+          create:
+              (context) => LocationRepository(
+                localLocations: DbLocationsDataSource(db: DataBase()),
+                networkLocationsDataSource: NetworkLocationsDataSource(),
+              ),
+        ),
+        RepositoryProvider<IOrderRepository>(
+          create:
+              (context) => OrderRepository(
+                networkOrderDataSource: NetworkOrdersDataSource(dio: dioClient),
+              ),
+        ),
+      ],
+      child: MultiBlocProvider(
         providers: [
-          RepositoryProvider<ICategoriesRepository>(
-            create:
-                (context) => CategoriesRepository(
-                  networkCategoriesDataSource: NetworkCategoriesDataSource(
-                    dio: dioClient,
-                  ),
-                  localCategories: DbCategoriesDataSource(db: DataBase()),
-                ),
+          BlocProvider(
+            create: (context) => CartBloc(context.read<IOrderRepository>()),
           ),
-          RepositoryProvider<IProductsRepository>(
+          BlocProvider(
             create:
-                (context) => ProductsRepository(
-                  networkProductsDataSource: NetworkProductsDataSource(
-                    dio: dioClient,
-                  ),
-                  dbProducts: DbProductsDataSource(db: DataBase()),
-                ),
-          ),
-          RepositoryProvider<ILocationsRepository>(
-            create:
-                (context) => LocationRepository(
-                  localLocations: DbLocationsDataSource(db: DataBase()),
-                  networkLocationsDataSource: NetworkLocationsDataSource(),
-                ),
-          ),
-
-          RepositoryProvider<IOrderRepository>(
-            create:
-                (context) => OrderRepository(
-                  networkOrderDataSource: NetworkOrdersDataSource(
-                    dio: dioClient,
-                  ),
-                ),
+                (context) =>
+                    MenuBloc(
+                        context.read<IProductsRepository>(),
+                        context.read<ICategoriesRepository>(),
+                        context.read<ILocationsRepository>(),
+                      )
+                      ..add(const LocationsLoadingStarted())
+                      ..add(const CategoryLoadingStarted()),
           ),
         ],
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider(
-              create: (context) => CartBloc(context.read<IOrderRepository>()),
-            ),
-            BlocProvider(
-              create:
-                  (context) => MenuBloc(
-                    context.read<IProductsRepository>(),
-                    context.read<ICategoriesRepository>(),
-                    context.read<ILocationsRepository>(),
-                  )..add(const CategoryLoadingStarted()),
-            ),
-          ],
-          child: MaterialApp(home: MenuScreen()),
+        child: MaterialApp(
+          theme: theme,
+          initialRoute: '/menu',
+          routes: {
+            '/menu': (_) => MenuScreen(),
+            '/locations': (_) => LocationsScreen(),
+            '/map': (_) => MapScreen(),
+          },
         ),
       ),
     );
