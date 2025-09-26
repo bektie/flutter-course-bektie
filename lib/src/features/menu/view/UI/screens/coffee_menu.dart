@@ -1,0 +1,232 @@
+import 'package:coffeeshop/src/features/menu/bloc/cart/cart_bloc.dart';
+import 'package:coffeeshop/src/features/menu/bloc/menu/menu_bloc.dart';
+import 'package:coffeeshop/src/features/menu/view/UI/screens/map_screen.dart';
+import 'package:coffeeshop/src/features/menu/view/UI/widgets/builders.dart';
+import 'package:coffeeshop/src/features/menu/view/UI/widgets/order_bottomsheet.dart';
+import 'package:coffeeshop/src/theme/app.colors.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+
+class MenuScreen extends StatefulWidget {
+  const MenuScreen({super.key});
+
+  @override
+  State<MenuScreen> createState() => _MenuScreenState();
+}
+
+class _MenuScreenState extends State<MenuScreen> {
+  late String selectedCategoryName;
+  final ItemScrollController _menuController = ItemScrollController();
+  final ItemScrollController _appBarController = ItemScrollController();
+  late ItemPositionsListener itemListener;
+  int current = 0;
+  bool inProgress = false;
+
+  @override
+  void initState() {
+    super.initState();
+    itemListener = ItemPositionsListener.create();
+    itemListener.itemPositions.addListener(() {
+      if (itemListener.itemPositions.value.isNotEmpty &&
+          inProgress != true &&
+          current != itemListener.itemPositions.value.first.index) {
+        setCurrent(itemListener.itemPositions.value.first.index);
+        appBarScrollToCategory(itemListener.itemPositions.value.first.index);
+      }
+      bool needToPaginate =
+          itemListener.itemPositions.value.last.itemTrailingEdge <= 3 &&
+          inProgress != true &&
+          context
+              .read<MenuBloc>()
+              .state
+              .items
+              .where((e) => e.categoryId == current + 2)
+              .toList()
+              .isEmpty;
+      if (needToPaginate) {
+        context.read<MenuBloc>().add(const PageLoadingStarted());
+      }
+    });
+  }
+
+  void setCurrent(int newCurrent) {
+    setState(() {
+      current = newCurrent;
+    });
+  }
+
+  void menuScrollToCategory(int ind) async {
+    inProgress = true;
+    _menuController.scrollTo(
+      index: ind,
+      duration: const Duration(milliseconds: 1000),
+    );
+    await Future.delayed(const Duration(milliseconds: 1000));
+    inProgress = false;
+  }
+
+  void appBarScrollToCategory(int ind) async {
+    _appBarController.scrollTo(
+      curve: Curves.easeOut,
+      opacityAnimationWeights: [20, 20, 60],
+      index: ind,
+      duration: const Duration(milliseconds: 1000),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<MenuBloc, MenuState>(
+      builder: (context, state) {
+        if (state.status == MenuStatus.error) {
+          return const Center(child: Text('Ошибка загрузки'));
+        }
+
+        if (state.items.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return SafeArea(
+          child: Scaffold(
+            body: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 16,
+                    right: 20,
+                    bottom: 8,
+                  ),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 16),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MapScreen(),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.only(bottom: 10),
+                          color: Colors.transparent,
+                          child: Row(
+                            children: [
+                              Icon(Icons.location_on),
+                              Text(
+                                state.selectedLocation?.address ??
+                                    (state.locations.isNotEmpty
+                                        ? state.locations.first.address
+                                        : 'Ленина 15'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 40,
+                        child: ScrollablePositionedList.builder(
+                          itemScrollController: _appBarController,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: state.categories.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4,
+                              ),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  context.read<MenuBloc>().add(
+                                    OneCategoryLoadingStarted(
+                                      state.categories[index],
+                                    ),
+                                  );
+                                  setCurrent(index);
+                                  menuScrollToCategory(index);
+                                  appBarScrollToCategory(index);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      index == current
+                                          ? AppColors.lightblue
+                                          : AppColors.white,
+                                ),
+                                child: Text(
+                                  state.categories[index].slug,
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.bodyMedium?.copyWith(
+                                    color:
+                                        index == current
+                                            ? AppColors.white
+                                            : AppColors.black,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 16, right: 20),
+                    child: ScrollablePositionedList.builder(
+                      itemScrollController: _menuController,
+                      itemPositionsListener: itemListener,
+                      itemBuilder: (context, index) {
+                        final category = state.categories[index];
+                        final products =
+                            state.items
+                                .where((e) => e.categoryId == category.id)
+                                .toList();
+                        return BuilderGrid(
+                          category: category,
+                          products: products,
+                        );
+                      },
+                      itemCount: state.categories.length,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            floatingActionButton: BlocBuilder<CartBloc, CartState>(
+              builder: (context, state) {
+                if (state.cartItems.isNotEmpty) {
+                  return FloatingActionButton.extended(
+                    backgroundColor: AppColors.lightblue,
+                    onPressed:
+                        () => {
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: AppColors.white,
+                            context: context,
+                            builder:
+                                (_) => BlocProvider.value(
+                                  value: BlocProvider.of<CartBloc>(context),
+                                  child: const OrderBottomSheet(),
+                                ),
+                          ),
+                        },
+                    icon: const Icon(Icons.local_mall, color: AppColors.white),
+                    label: Text(
+                      '${state.cost.floor()}',
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+}

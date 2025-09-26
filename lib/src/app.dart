@@ -1,0 +1,96 @@
+import 'package:coffeeshop/src/common/database.dart';
+import 'package:coffeeshop/src/features/menu/bloc/cart/cart_bloc.dart';
+import 'package:coffeeshop/src/features/menu/bloc/menu/menu_bloc.dart';
+import 'package:coffeeshop/src/features/menu/data/data_sources/categories_datasource.dart';
+import 'package:coffeeshop/src/features/menu/data/data_sources/dbsource.dart';
+import 'package:coffeeshop/src/features/menu/data/data_sources/order_data_source.dart';
+import 'package:coffeeshop/src/features/menu/data/data_sources/products_datasources.dart';
+import 'package:coffeeshop/src/features/menu/data/repositories/category_repository.dart';
+import 'package:coffeeshop/src/features/menu/data/repositories/location_repository.dart';
+import 'package:coffeeshop/src/features/menu/data/repositories/order_repository.dart';
+import 'package:coffeeshop/src/features/menu/data/repositories/product_repository.dart';
+import 'package:coffeeshop/src/features/menu/view/UI/screens/coffee_menu.dart';
+import 'package:coffeeshop/src/features/menu/data/data_sources/locations_datasource.dart';
+import 'package:coffeeshop/src/features/menu/view/UI/screens/locations_screen.dart';
+import 'package:coffeeshop/src/features/menu/view/UI/screens/map_screen.dart';
+import 'package:coffeeshop/src/theme/theme.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+class CoffeeShopApp extends StatelessWidget {
+  const CoffeeShopApp({super.key});
+  static final dioClient = Dio(
+    BaseOptions(
+      baseUrl: 'https://coffeeshop.academy.effective.band/api/v1',
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 15),
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<ICategoriesRepository>(
+          create:
+              (context) => CategoriesRepository(
+                networkCategoriesDataSource: NetworkCategoriesDataSource(
+                  dio: dioClient,
+                ),
+                localCategories: DbCategoriesDataSource(db: DataBase()),
+              ),
+        ),
+        RepositoryProvider<IProductsRepository>(
+          create:
+              (context) => ProductsRepository(
+                networkProductsDataSource: NetworkProductsDataSource(
+                  dio: dioClient,
+                ),
+                dbProducts: DbProductsDataSource(db: DataBase()),
+              ),
+        ),
+        RepositoryProvider<ILocationsRepository>(
+          create:
+              (context) => LocationRepository(
+                localLocations: DbLocationsDataSource(db: DataBase()),
+                networkLocationsDataSource: NetworkLocationsDataSource(),
+              ),
+        ),
+        RepositoryProvider<IOrderRepository>(
+          create:
+              (context) => OrderRepository(
+                networkOrderDataSource: NetworkOrdersDataSource(dio: dioClient),
+              ),
+        ),
+      ],
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => CartBloc(context.read<IOrderRepository>()),
+          ),
+          BlocProvider(
+            create:
+                (context) =>
+                    MenuBloc(
+                        context.read<IProductsRepository>(),
+                        context.read<ICategoriesRepository>(),
+                        context.read<ILocationsRepository>(),
+                      )
+                      ..add(const LocationsLoadingStarted())
+                      ..add(const CategoryLoadingStarted()),
+          ),
+        ],
+        child: MaterialApp(
+          theme: theme,
+          initialRoute: '/menu',
+          routes: {
+            '/menu': (_) => MenuScreen(),
+            '/locations': (_) => LocationsScreen(),
+            '/map': (_) => MapScreen(),
+          },
+        ),
+      ),
+    );
+  }
+}
